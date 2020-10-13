@@ -13,7 +13,9 @@
 	- [算法基础](#算法基础)
 	- [离散化](#离散化)
 	- [01分数规划](#01分数规划)
-	- [任务规划 | Livshits-Kladov定理](#任务规划--livshits-kladov定理)
+	- [任务规划](#任务规划)
+		- [Livshits-Kladov定理](#livshits-kladov定理)
+		- [Johnson规则](#johnson规则)
 	- [分治](#分治)
 		- [逆序数×二维偏序](#逆序数×二维偏序)
 	- [最大空矩阵 | 悬线法](#最大空矩阵--悬线法)
@@ -33,6 +35,7 @@
 		- [判断两条线段是否相交](#判断两条线段是否相交)
 		- [others of 平面几何基本操作](#others-of-平面几何基本操作)
 	- [二维凸包](#二维凸包)
+		- [<补充>动态凸包](#补充动态凸包)
 	- [旋转卡壳](#旋转卡壳)
 	- [最大空矩形 | 扫描法](#最大空矩形--扫描法)
 	- [平面最近点对 | 分治](#平面最近点对--分治)
@@ -51,6 +54,7 @@
 	- [单调队列](#单调队列)
 	- [树状数组](#树状数组)
 	- [线段树](#线段树)
+		- [<补充>高拓展性线段树](#补充高拓展性线段树)
 		- [<补充>权值线段树（动态开点 线段树合并 线段树分裂）](#补充权值线段树动态开点-线段树合并-线段树分裂)
 		- [<补充>zkw线段树](#补充zkw线段树)
 		- [<补充>可持久化数组](#补充可持久化数组)
@@ -63,6 +67,9 @@
 	- [K-D tree](#k-d-tree)
 	- [划分树](#划分树)
 	- [莫队](#莫队)
+		- [普通莫队](#普通莫队)
+		- [带修莫队](#带修莫队)
+		- [回滚莫队](#回滚莫队)
 	- [二叉搜索树](#二叉搜索树)
 		- [不平衡的二叉搜索树](#不平衡的二叉搜索树)
 		- [无旋treap](#无旋treap)
@@ -75,16 +82,20 @@
 		- [拓扑排序×Toposort](#拓扑排序×toposort)
 		- [欧拉路径 欧拉回路](#欧拉路径-欧拉回路)
 		- [dfs树 bfs树](#dfs树-bfs树)
+	- [线段树优化建图](#线段树优化建图)
 	- [最短路径](#最短路径)
 		- [Dijkstra](#dijkstra)
 		- [Floyd](#floyd)
 		- [SPFA](#spfa)
 		- [Johnson](#johnson)
 		- [最小环](#最小环)
+		- [差分约束](#差分约束)
+		- [同余最短路](#同余最短路)
 	- [最小生成树×MST](#最小生成树×mst)
 		- [Kruskal](#kruskal)
 		- [Boruvka](#boruvka)
 		- [最小树形图 | 朱刘算法](#最小树形图--朱刘算法)
+		- [绝对中心+最小直径生成树×MDST](#绝对中心最小直径生成树×mdst)
 	- [树论](#树论)
 		- [树的直径](#树的直径)
 		- [树的重心](#树的重心)
@@ -97,11 +108,13 @@
 		- [树链剖分](#树链剖分)
 		- [树分治](#树分治)
 			- [点分治](#点分治)
+		- [树哈希](#树哈希)
 	- [联通性相关](#联通性相关)
 		- [强联通分量scc+缩点 | Tarjan](#强联通分量scc缩点--tarjan)
 		- [边双连通分量 | Tarjan](#边双连通分量--tarjan)
 		- [割点×割顶](#割点×割顶)
 	- [2-sat问题](#2-sat问题)
+	- [支配树 | Lengauer−Tarjan算法](#支配树--lengauer−tarjan算法)
 	- [图上的NP问题](#图上的np问题)
 		- [最大团+极大团计数](#最大团极大团计数)
 		- [最小染色数](#最小染色数)
@@ -149,7 +162,9 @@
 		- [STL手写内存分配器](#stl手写内存分配器)
 	- [在TLE边缘试探](#在tle边缘试探)
 	- [对拍](#对拍)
-	- [战术分析 坑点](#战术分析-坑点)
+	- [战术分析](#战术分析)
+		- [坑点](#坑点)
+		- [算法](#算法)
 - [数学](#数学)
 	- [数论](#数论)
 		- [基本操作](#基本操作)
@@ -172,13 +187,14 @@
 				- [筛其他函数](#筛其他函数)
 			- [min_25筛](#min_25筛)
 		- [素数约数相关](#素数约数相关)
-			- [唯一分解](#唯一分解)
+			- [唯一分解 质因数分解](#唯一分解-质因数分解)
 			- [素数判定 | 朴素 or Miller-Rabin](#素数判定--朴素-or-miller-rabin)
 			- [大数分解 | Pollard-rho](#大数分解--pollard-rho)
 			- [单个约数个数函数](#单个约数个数函数)
 			- [反素数生成](#反素数生成)
 		- [数论杂项](#数论杂项)
 			- [数论分块](#数论分块)
+			- [高斯整数](#高斯整数)
 			- [二次剩余](#二次剩余)
 			- [莫比乌斯反演](#莫比乌斯反演)
 			- [杜教筛](#杜教筛)
@@ -201,8 +217,14 @@
 		- [置换群](#置换群)
 		- [多项式](#多项式)
 			- [拉格朗日插值](#拉格朗日插值)
-			- [快速傅里叶变换+任意模数](#快速傅里叶变换任意模数)
-			- [多项式的一些概念](#多项式的一些概念)
+			- [多项式基本操作](#多项式基本操作)
+			- [快速傅里叶变换×FTT+任意模数](#快速傅里叶变换×ftt任意模数)
+			- [快速数论变换×NTT](#快速数论变换×ntt)
+			- [快速沃尔什变换×FWT](#快速沃尔什变换×fwt)
+			- [多项式运算](#多项式运算)
+			- [生成函数](#生成函数)
+				- [普通生成函数×OGF](#普通生成函数×ogf)
+				- [指数生成函数×EGF](#指数生成函数×egf)
 		- [矩阵](#矩阵)
 			- [矩阵乘法 矩阵快速幂](#矩阵乘法-矩阵快速幂)
 			- [矩阵高级操作](#矩阵高级操作)
@@ -256,6 +278,53 @@ signed main(){
 }
 ```
 
+另一版本
+
+```c++
+//#pragma GCC optimize(3)
+#include <bits/stdc++.h>
+using namespace std;
+#define repeat(i,a,b) for(int i=(a),_=(b);i<_;i++)
+#define repeat_back(i,a,b) for(int i=(b)-1,_=(a);i>=_;i--)
+#define mst(a,x) memset(a,x,sizeof(a))
+#define fi first
+#define se second
+mt19937 rnd(chrono::high_resolution_clock::now().time_since_epoch().count());
+typedef long long ll; typedef double lf; typedef pair<ll,ll> pii;
+int cansel_sync=(ios::sync_with_stdio(0),cin.tie(0),0); ll read(); lf readf();
+const int inf=~0u>>2; const ll INF=~0ull>>2; const lf pi=acos(-1.0);
+template<typename T> void operator<<(vector<T> &a,T b){a.push_back(b);}
+const int N=200010; const ll mod=(1?1000000007:998244353); ll mul(ll a,ll b,ll m=mod); ll qpow(ll a,ll b,ll m=mod);
+#define int ll
+void Solve(){
+}
+signed main(){
+	//freopen("data.txt","r",stdin);
+	int T=1; T=read();
+	repeat(ca,1,T+1){
+		Solve();
+	}
+	return 0;
+}
+ll read(){
+	ll x; if(scanf("%lld",&x)==-1)exit(0);
+	return x;
+}
+lf readf(){
+	lf x; if(scanf("%lf",&x)==-1)exit(0);
+	return x;
+}
+ll mul(ll a,ll b,ll m){
+	return a*b%m;
+}
+ll qpow(ll a,ll b,ll m){
+	ll ans=1;
+	for(;b;a=mul(a,a,m),b>>=1)
+		if(b&1)ans=mul(ans,a,m);
+	return ans;
+}
+```
+
 放在本地的内容（比如可以放进 `bits/stdc++.h`）（当然修改了头文件还要编译一下）
 
 ```c++
@@ -299,12 +368,10 @@ std::ostream &operator<<(std::ostream &o,const std::pair<A,B> &x){
 #define lll __int128
 #define inline __inline __attribute__((always_inline))
 //struct name{bool operator()(const type &x,const type &y){return func(x,y);}}
-#define vector basic_string
 #define sortunique(a) ({sort(a.begin(),a.end()); a.erase(unique(a.begin(),a.end()),a.end());})
 #define gets(s) (scanf("%[^\n]",s)+1)
 template<typename T> T sqr(const T &x){return x*x;}
-typedef long double lf;
-template<typename A,typename B>void operator<<(A &a,B b){a.push_back(b);}
+typedef long double llf;
 #define endl "\n"
 ```
 
@@ -526,6 +593,7 @@ BigInteger
 ```java
 import java.math.BigInteger;
 BigInteger n=new BigInteger("0");
+sc.nextBigInteger() //括号里可以写进制
 BigInteger[] arr=new BigInteger[10];
 n1.intValue() //转换为int
 n1.longValue() //转换
@@ -553,7 +621,31 @@ n1.divide(n2,2,BigDecimal.ROUND_HALF_UP) //保留两位（四舍五入）
 
 ## python3
 
-eval 表达式求值
+- eval(s) 表达式求值
+
+读入（EOF停止）
+
+```python
+def Solve():
+	a,b=map(int,input().split())
+	print(a+b)
+while True:
+	try:
+		Solve()
+	except EOFError:
+		break
+```
+
+读入（T组数据）
+
+```python
+def Solve():
+	a,b=map(int,input().split())
+	print(a+b)
+T=int(input())
+for ca in range(1,T+1):
+    Solve()
+```
 
 # 常规算法
 
@@ -723,13 +815,27 @@ lf solve(){
 }
 ```
 
-## 任务规划 | Livshits-Kladov定理
+## 任务规划
+
+### Livshits-Kladov定理
 
 - 给出 $n$ 个任务，第 $i$ 个任务花费 $t_i$ 时间，该任务开始之前等待 $t$ 时间的代价是 $f_i(t)$ 个数，求一个任务排列方式，最小化代价 $\sum\limits_{i=1}^n f_j(\sum\limits_{j=1}^{i-1}t_i)$
 - Livshits-Kladov定理：当 $f_i(t)$ 是一次函数 / 指数函数 / 相同的单增函数时，最优解可以用排序计算
 - 一次函数：$f_i(t)=c_it+d_i$，按 $\dfrac {c_i}{t_i}$ 升序排列
 - 指数函数：$f_i(t)=c_ia^t+d_i$，按 $\dfrac{1-a^{t_i}}{c_i}$ 升序排列
 - 相同的单增函数：按 $t_i$ 升序排序
+
+### Johnson规则
+
+- $n$ 个任务和两个机器，每个任务必须先在 $A$ 上做 $a_i$ 分钟再在 $B$ 上做 $b_i$ 分钟，求最小时间
+```c++
+sort(p,p+n,[](int x,int y){
+	int xx=a[x]>b[x],yy=a[y]>b[y];
+	if(xx!=yy)return xx<yy;
+	if(xx==0)return a[x]<a[y];
+	else return b[x]>b[y];
+});
+```
 
 ## 分治
 
@@ -738,8 +844,8 @@ lf solve(){
 - $O(n\log n)$
 
 ```c++
-void merge(int l,int r){ //归并排序
-	//对[l,r-1]的数排序
+void merge(int l,int r){
+	static int t[N];
 	if(r-l<=1)return;
 	int mid=l+(r-l)/2;
 	merge(l,mid);
@@ -748,7 +854,7 @@ void merge(int l,int r){ //归并排序
 	while(s<r){
 		if(p>=mid || (q<r && a[p]>a[q])){
 			t[s++]=a[q++];
-			ans+=mid-p; //统计逆序数
+			ans+=mid-p; //here
 		}
 		else
 			t[s++]=a[p++];
@@ -797,7 +903,7 @@ int getlm(){
 <H4>精确覆盖</H4>
 
 - 在01矩阵中找到某些行，它们两两不相交，且它们的并等于全集
-- xy编号从 $1$ 开始！$O(\exp)$，节点数 $<5000$
+- xy编号从 $1$ 开始！$O(\exp)$，结点数 $<5000$
 
 ```c++
 int n,m;
@@ -862,7 +968,7 @@ struct DLX{
 <H4>重复覆盖</H4>
 
 - 在01矩阵中找到最少的行，它们的并等于全集
-- xy编号还是从 $1$ 开始！$O(\exp)$，节点数可能 $<3000$
+- xy编号还是从 $1$ 开始！$O(\exp)$，结点数可能 $<3000$
 
 ```c++
 struct DLX{
@@ -1276,6 +1382,52 @@ void convex(vec a[],int n){
 }
 ```
 
+### <补充>动态凸包
+
+- 支持添加点、询问点是否在凸包内，$O(\log n)$
+
+```c++
+const lf eps=1e-7;
+multiset<pair<lf,vec>> st; vec c;
+typedef multiset<pair<lf,vec>>::iterator ptr;
+void push(vec v){
+	st.insert({v.theta(),v});
+}
+void dec(ptr &p){if(p==st.begin())p=st.end(); --p;}
+void inc(ptr &p){++p; if(p==st.end())p=st.begin();}
+ptr find(vec v){
+	auto p=st.lower_bound({v.theta(),v}); dec(p);
+	return p;
+}
+bool out(vec v){ //whether out of the convex
+	v=v-c;
+	auto l=find(v),r=l; inc(r);
+	return cross(l->se,r->se,v)<-eps;
+}
+void init(vec v1,vec v2,vec v3){
+	st.clear();
+	c=(v1+v2+v3)*(1.0/3);
+	push(v1-c); push(v2-c); push(v3-c);
+}
+void add(vec v){ //add a point to convex
+	if(!out(v))return;
+	v=v-c;
+	auto l=find(v),r=l; inc(r);
+	auto l2=l; dec(l2);
+	while(cross(l->se,l2->se,v)>0){
+		dec(l),dec(l2);
+	}
+	auto r2=r; inc(r2);
+	while(cross(r->se,r2->se,v)<0){
+		inc(r),inc(r2);
+	}
+	inc(l);
+	if(*l<=*r)st.erase(l,r);
+	else st.erase(l,st.end()),st.erase(st.begin(),r);
+	st.insert({v.theta(),v});
+}
+```
+
 ## 旋转卡壳
 
 - 每次找到凸包每条边的最远点，基于二维凸包，$O(n\log n)$
@@ -1341,40 +1493,39 @@ int query(){
 
 ## 平面最近点对 | 分治
 
-- $O(n\log n)$，可能有锅
+- $O(n\log n)$
 
 ```c++
 lf ans;
 bool cmp_y(vec a,vec b){return a.y<b.y;}
-void rec(int l,int r){ //左闭右开区间
+void work(int l,int r){
 	#define upd(x,y) {ans=min(ans,(x-y).len());}
-	if(r-l<4){
+	if(r-l<=4){
 		repeat(i,l,r)
 		repeat(j,i+1,r)
 			upd(a[i],a[j]);
-		sort(a+l,a+r,cmp_y); //按y排序
+		sort(a+l,a+r,cmp_y);
 		return;
 	}
 	int m=(l+r)/2;
 	lf midx=a[m].x;
-	rec(l,m),rec(m,r);
+	work(l,m); work(m,r);
 	static vec b[N];
-	merge(a+l,a+m,a+m,a+r,b+l,cmp_y); //逐渐按y排序
-	copy(b+l,b+r,a+l);
+	inplace_merge(a+l,a+m,a+r,cmp_y);
 	int t=0;
 	repeat(i,l,r)
 	if(abs(a[i].x-midx)<ans){
 		repeat_back(j,0,t){
-			if(a[i].y-b[i].y>ans)break;
+			if(a[i].y-b[j].y>ans)break;
 			upd(a[i],b[j]);
 		}
 		b[t++]=a[i];
 	}
 }
-lf nearest(){
+lf nearest(int n){
 	ans=1e20;
-	sort(a,a+n); //按x排序
-	rec(0,n);
+	sort(a,a+n,[](vec a,vec b){return a.x<b.x;});
+	work(0,n);
 	return ans;
 }
 ```
@@ -1775,7 +1926,12 @@ void convex(vec a[],int n){
 - 正方形点阵：`面积 = 内部点数 + 边上点数 / 2 - 1`
 - 三角形点阵：`面积 = 2 * 内部点数 + 边上点数 - 2`
 
-<H3>公式</H3>
+<H3>圆的面积并</H3>
+
+- 求每个圆未被其他圆覆盖的圆弧，逆时针作它的弦的向量，答案为这些弓形面积加上弦向量组成的多边形有向面积
+- $O(n^2\log n)$
+
+<H3>几何公式</H3>
 
 - 三角形面积 $S=\sqrt{P(P-a)(P-b)(P-c)}$，$P$ 为半周长
 - 斯特瓦尔特定理：$BC$ 上一点 $P$，有 $AP=\sqrt{AB^2\cdot \dfrac{CP}{BC}+AC^2\cdot \dfrac{BP}{BC}-BP\cdot CP}$
@@ -1798,6 +1954,7 @@ lf V(lf a,lf b,lf c,lf d,lf e,lf f){ //a,b,c共顶点
 	return sqrt(4*sqr(a*b*c)-sqr(a*A)-sqr(b*B)-sqr(c*C)+A*B*C)/12;
 }
 ```
+
 # 数据结构
 
 ## st表
@@ -1963,12 +2120,12 @@ struct BIT{
 	void init(int n){
 		fill(t,t+n+1,0);
 	}
-	void add(ll x,ll k){ //位置x加上k
+	void add(int x,ll k){ //位置x加上k
 		//x++;
 		for(;x<N;x+=lb(x))
 			t[x]+=k;
 	}
-	ll sum(ll x){ //求[1,x]的和 //[0,x]
+	ll sum(int x){ //求[1,x]的和 //[0,x]
 		//x++;
 		ll ans=0;
 		for(;x!=0;x-=lb(x))
@@ -2089,20 +2246,77 @@ struct seg{ //初始化init()修改查询tr->sth()
 		toa();
 	}
 	void update(int x,int y,ll k){
-		x=max(x,l); y=min(y,r); if(x>y){down();return;}
-		if(x==l && y==r){toz(k); down(); return;}
+		if(x>r || y<l){down(); return;}
+		if(x<=l && y>=r){toz(k); down(); return;}
 		down();
 		lc->update(x,y,k);
 		rc->update(x,y,k);
 		up();
 	}
 	ll query(int x,int y){
-		x=max(x,l); y=min(y,r); if(x>y)return a0;
+		if(x>r || y<l)return a0;
 		down();
-		if(x==l && y==r)return a;
+		if(x<=l && y>=r)return a;
 		return U(lc->query(x,y),rc->query(x,y));
 	}
 }tr[N*2],*pl;
+void seg::init(int _l,int _r){
+	l=_l,r=_r; state=0;
+	if(l==r){a=in[l]; return;}
+	int m=(l+r)>>1;
+	lc=++pl; lc->init(l,m);
+	rc=++pl; rc->init(m+1,r);
+	up();
+}
+void init(int l,int r){
+	pl=tr; tr->init(l,r);
+}
+```
+
+### <补充>高拓展性线段树
+
+- 例：luogu P3373 线段树2，支持区间加、区间乘、区间和查询
+
+```c++
+struct Z{
+	int x,y; explicit Z(int x=1,int y=0):x(x),y(y){}
+	void push(Z b,int l,int r){
+		x=(x*b.x)%mod;
+		y=(y*b.x+b.y)%mod;
+	}
+};
+struct A{
+	int x; explicit A(int x=0):x(x){}
+	void push(Z b,int l,int r){
+		x=(x*b.x+b.y*(r-l+1))%mod;
+	}
+	A operator+(A b)const{return A((x+b.x)%mod);}
+};
+struct seg{
+	A a; Z z; bool state; int l,r; seg *lc,*rc;
+	void init(int,int);
+	void up(){a=lc->a+rc->a;}
+	void toz(Z x){z.push(x,l,r),state=1;}
+	void down(){
+		if(!state)return;
+		if(l<r){lc->toz(z); rc->toz(z);}
+		a.push(z,l,r),z=Z(),state=0;
+	}
+	void update(int x,int y,Z k){
+		if(x>r || y<l){down(); return;}
+		if(x<=l && y>=r){toz(k); down(); return;}
+		down();
+		lc->update(x,y,k);
+		rc->update(x,y,k);
+		up();
+	}
+	A query(int x,int y){
+		if(x>r || y<l)return A();
+		down(); if(x<=l && y>=r)return a;
+		return lc->query(x,y)+rc->query(x,y);
+	}
+}tr[N*2],*pl;
+int in[N];
 void seg::init(int _l,int _r){
 	l=_l,r=_r; state=0;
 	if(l==r){a=in[l]; return;}
@@ -2148,7 +2362,7 @@ seg *merge(seg *a,seg *b,int l,int r){ //private, return the merged tree
 	return a;
 }
 void merge(int x,int y,int l,int r){ //merge tree x and y
-	if(d[x]==d[y])return; 
+	if(d[x]==d[y])return;
 	rt[d[x]]=merge(rt[d[x]],rt[d[y]],l,r);
 	d[y]=d[x];
 }
@@ -2190,8 +2404,9 @@ struct seg{
 	const ll a0=0; //查询操作的零元
 	int n; ll a[1024*1024*4*2]; //内存等于2^k且大于等于两倍inn
 	void init(int inn){ //建树
-		for(n=1;n<inn;n<<=1); repeat(i,inn,n)in[i]=a0;
-		repeat(i,0,n)a[n+i]=in[i];
+		for(n=1;n<inn;n<<=1);
+		repeat(i,0,inn)a[n+i]=in[i];
+		repeat(i,inn,n)a[n+i]=a0;
 		repeat_back(i,1,n)up(i);
 	}
 	void up(int x){
@@ -2340,7 +2555,7 @@ struct DSU{ //合并：d[x]=d[y]，查找：d[x]==d[y]
 
 ```c++
 struct DSU{
-	int a[10010],sz[10010];
+	int a[N],sz[N];
 	void init(int n){
 		iota(a,a+n+1,0);
 		fill(sz,sz+n+1,1);
@@ -2357,6 +2572,7 @@ struct DSU{
 		if(sz[x]>sz[y])swap(x,y);
 		a[x]=y; sz[y]+=sz[x];
 	}
+	int operator[](int x){return fa(x);}
 }d;
 ```
 
@@ -2364,7 +2580,7 @@ struct DSU{
 
 ```c++
 struct DSU{
-	int a[50010],r[50010];
+	int a[N],r[N];
 	void init(int n){
 		repeat(i,0,n+1)a[i]=i,r[i]=0;
 	}
@@ -2375,7 +2591,7 @@ struct DSU{
 	int inv(int a){ //关系a的逆
 		return -a;
 	}
-	int fa(int x){ //返回根节点
+	int fa(int x){ //返回根结点
 		if(a[x]==x)return x;
 		int f=a[x],ff=fa(f);
 		r[x]=plus(r[x],r[f]);
@@ -2425,7 +2641,7 @@ void join(seg *&a,seg *&sz,int x,int y){ //a=h[i].fi,sz=h[i].se
 
 ## 左偏树
 
-- 万年不用，$O(?)$
+- 万年不用，$O(\log n)$
 - ~~如果没有特殊要求一律平板电视~~
 
 ```c++
@@ -2476,6 +2692,28 @@ struct leftist{ //编号从1开始，因为空的左右儿子会指向0
 //合并：lt.join(x,y)
 //堆顶：lt.val[lt.top(x)]
 //弹出：lt.pop(x)
+```
+
+```c++
+struct node{
+	int v,dis;
+	node *l,*r;
+}pool[N],*pl,*tr[N];
+int dis(node *u){return u?u->dis:0;}
+node *newnode(){*pl=node(); return pl++;}
+void init(){
+	pl=pool;
+}
+node *merge(node *x,node *y){
+	if(!x)return y; if(!y)return x;
+	if(x->v < y->v)swap(x,y);
+	x->r=merge(x->r,y);
+	if(dis(x->l) < dis(x->r))swap(x->l,x->r);
+	x->dis=dis(x->r)+1;
+	return x;
+}
+void pop(node *&u){u=merge(u->l,u->r);}
+int top(node *u){return u->v;}
 ```
 
 ## 珂朵莉树×老司机树
@@ -2532,7 +2770,7 @@ struct node{
 bool cmp1(int a,int b){return s[a].x<s[b].x;}
 bool cmp2(int a,int b){return s[a].y<s[b].y;}
 struct kdtree{
-	int rt,cur; //rt根节点
+	int rt,cur; //rt根结点
 	int d[N],sz[N],lc[N],rc[N]; //d=1竖着砍，sz子树大小
 	int L[N],R[N],D[N],U[N]; //该子树的界线
 	int sum[N]; //维护的二维区间信息（二维区间和）
@@ -2555,7 +2793,7 @@ struct kdtree{
 			U[x]=max(U[x],U[rc[x]]);
 		}
 	}
-	int build(int l,int r){ //以序列g[l..r]为模板重建树，返回根节点
+	int build(int l,int r){ //以序列g[l..r]为模板重建树，返回根结点
 		if(l>r)return 0;
 		int mid=(l+r)>>1;
 		lf ax=0,ay=0,sx=0,sy=0;
@@ -2678,12 +2916,14 @@ struct divtree{ //tr.query(l,r,k,1,n): kth in [l,r]
 
 - 离线（甚至在线）处理区间问题，~~猛得一批~~
 
-<H3>普通莫队</H3>
+### 普通莫队
 
 - 移动指针 $l,r$ 来求所有区间的答案
 - 块大小为 $\sqrt n$，$O(n^{\tfrac 3 2})$
 
 ```c++
+int unit,n,bkt[N],a[N],final[N]; //bkt是桶
+ll ans;
 struct node{
 	int l,r,id;
 	bool operator<(const node &b)const{
@@ -2694,17 +2934,15 @@ struct node{
 	}
 };
 vector<node> query; //查询区间
-int unit,n,bkt[N],a[N],final_ans[N]; //bkt是桶
-ll ans;
 void update(int x,int d){
 	int &b=bkt[a[x]];
 	ans-=C(b,2); //操作示例
 	b+=d;
 	ans+=C(b,2); //操作示例
 }
-void solve(){ //final_ans[]即最终答案
+void solve(){ //final[]即最终答案
 	fill(bkt,bkt+n+1,0);
-	unit=int(ceil(sqrt(n)));
+	unit=sqrt(n)+1;
 	sort(query.begin(),query.end());
 	int l=1,r=0; ans=0; //如果原数组a编号从1开始
 	for(auto i:query){
@@ -2712,23 +2950,148 @@ void solve(){ //final_ans[]即最终答案
 		while(l>i.l)update(--l,1);
 		while(r<i.r)update(++r,1);
 		while(r>i.r)update(r--,-1);
-		final_ans[i.id]=ans;
+		final[i.id]=ans;
 	}
 }
 //repeat(i,0,m)query.push_back({read(),read(),i}); //输入查询区间
 ```
 
-<H3>带修莫队</H3>
+### 带修莫队
 
 - 相比与普通莫队，多了一个时间轴
 - 块大小为 $\sqrt[3]{nt}$，$O(\sqrt[3]{n^4t})$
-- 空缺
+
+```c++
+int unit,n,bkt[1000010],a[N],final[N];
+ll ans;
+struct node{
+	int l,r,t,id;
+	bool operator<(const node &b)const{
+		if(l/unit!=b.l/unit)return l<b.l;
+		if(r/unit!=b.r/unit)return r<b.r;
+		return r/unit%2?t<b.t:t>b.t;
+	}
+};
+struct node2{int x,pre,nxt;};
+vector<node> query;
+vector<node2> change;
+void update(int x,int d){
+	int &b=bkt[a[x]];
+	ans-=!!b;
+	b+=d;
+	ans+=!!b;
+}
+void solve(){
+	unit=pow(1.0*n*change.size(),1.0/3)+1;
+	sort(query.begin(),query.end());
+	int l=1,r=0,t=change.size(); ans=0;
+	for(auto i:query){
+		while(l<i.l)update(l++,-1);
+		while(l>i.l)update(--l,1);
+		while(r<i.r)update(++r,1);
+		while(r>i.r)update(r--,-1);
+		while(t<i.t){
+			int f=(change[t].x>=i.l && change[t].x<=i.r);
+			if(f)update(change[t].x,-1);
+			a[change[t].x]=change[t].nxt;
+			if(f)update(change[t].x,1);
+			t++;
+		}
+		while(t>i.t){
+			t--;
+			int f=(change[t].x>=i.l && change[t].x<=i.r);
+			if(f)update(change[t].x,-1);
+			a[change[t].x]=change[t].pre;
+			if(f)update(change[t].x,1);
+		}
+		final[i.id]=ans;
+	}
+}
+void Solve(){
+	n=read(); int q=read();
+	repeat(i,1,n+1)a[i]=read();
+	while(q--){
+		static char s[10]; scanf("%s",s);
+		if(*s=='Q'){
+			int l=read(),r=read();
+			query.push_back((node){l,r,(int)change.size(),(int)query.size()});
+		}
+		else{
+			int x=read(),y=read();
+			change.push_back((node2){x,a[x],y});
+			a[x]=y;
+		}
+	}
+	solve();
+	repeat(i,0,query.size())
+		printf("%d\n",final[i]);
+}
+```
+
+### 回滚莫队
+
+- 解决区间只能扩张不能收缩的问题
+- 对于块内区间，直接暴力；对于所有左端点在一个块的区间，从块的右端点出发，先扩张右边界再扩张左边界再回滚左边界
+- $O(n^{\tfrac 3 2})$
+
+```c++
+int n,unit;
+ll a[N],ans[N];
+typedef array<int,3> node; //l,r,id 
+vector<node> q;
+struct bucket{
+	ll a[N],vis[N],dcnt; ll ans=0;
+	vector<pair<ll *,ll>> rec;
+	void init(){dcnt++; ans=0; rec.clear();}
+	void push(ll x,int flag){
+		if(vis[x]!=dcnt)vis[x]=dcnt,a[x]=0;
+		if(flag){
+			rec.push_back({&a[x],a[x]});
+			rec.push_back({&ans,ans});
+		}
+		a[x]++;
+		ans=max(ans,x*a[x]);
+	}
+	void rollback(){
+		repeat_back(i,0,rec.size())*rec[i].fi=rec[i].se;
+		rec.clear();
+	}
+}bkt;
+void Solve(){
+	n=read(); int Q=read(); unit=sqrt(n)+1;
+	repeat(i,0,n)a[i]=read();
+	repeat(i,0,Q){
+		int x=read()-1,y=read()-1;
+		if(x/unit==y/unit){
+			bkt.init();
+			repeat(k,x,y+1)bkt.push(a[k],0);
+			ans[i]=bkt.ans;
+		}
+		else q.push_back({x,y,i});
+	}
+	sort(q.begin(),q.end(),[](node a,node b){
+		return pii(a[0]/unit,a[1])<pii(b[0]/unit,b[1]);
+	});
+	int p=0;
+	for(int i=unit;i<n;i+=unit){
+		bkt.init(); int r=i-1;
+		while(p!=(int)q.size() && q[p][0]<i){
+			while(r<q[p][1])bkt.push(a[++r],0);
+			repeat(j,q[p][0],i)bkt.push(a[j],1);
+			ans[q[p][2]]=bkt.ans;
+			bkt.rollback();
+			p++;
+		}
+	}
+	repeat(i,0,Q)printf("%lld\n",ans[i]);
+}
+```
 
 ## 二叉搜索树
 
 ### 不平衡的二叉搜索树
 
-- 左子树所有结点 $\le v <$ 右子树所有节点，目前仅支持插入，查询可以写一个 `map<int,TR *>`
+- 左子树所有结点 $\le v <$ 右子树所有结点，目前仅支持插入，查询可以写一个 `map<int,TR *>`
 
 ```c++
 struct TR{
@@ -2743,13 +3106,14 @@ struct TR{
 		else c->insert(v2);
 	}
 }*tr=new TR(0,inf,0);
-//inf是无效节点，用tr->ch[0]来访问根节点
+//inf是无效结点，用tr->ch[0]来访问根结点
 ```
 
 ### 无旋treap
 
 - 普通平衡树按v分裂，文艺平衡树按sz分裂
 - insert,erase操作在普通平衡树中，push_back,output(dfs)在文艺平衡树中
+- build(笛卡尔树线性构建)在普通平衡树中
 - 普通平衡树
 
 ```c++
@@ -2795,7 +3159,20 @@ struct treap{
 	void init(){
 		pl=pool;
 		rt=0;
+		//top=0;
 	}
+	/*
+	node *stk[N]; int top;
+	void build(int pri,int v){ //v is nondecreasing
+		node *i=++pl; *i=node(v); i->pri=pri;
+		int cur=top;
+		while(cur && stk[cur]->pri<i->pri)cur--;
+		if(cur<top)i->l=stk[cur+1],up(i);
+		if(cur)stk[cur]->r=i,up(stk[cur]); else rt=i;
+		stk[++cur]=i;
+		top=cur;
+	}
+	*/
 	void insert(int key){
 		auto o=split(rt,key);
 		*++pl=node(key);
@@ -2911,7 +3288,7 @@ struct treap{
 - 普通平衡树
 
 ```c++
-struct node *pl; 
+struct node *pl;
 struct node{
 	int pri,v,sz;
 	node *l,*r;
@@ -2936,7 +3313,7 @@ struct node{
 	friend node *merge(node *x,node *y){
 		if(x==0)return y;
 		if(y==0)return x;
-		node *w=++pl; 
+		node *w=++pl;
 		if(x->pri>y->pri){
 			*w=*x;
 			w->r=merge(x->r,y);
@@ -2955,9 +3332,9 @@ struct node{
 
 双头优先队列可以用multiset
 
-支持插入、查询中位数可以用双堆
-
 区间众数：离线用莫队，在线用分块
+
+支持插入、查询中位数可以用双堆
 
 ```c++
 priority_queue<ll> h1; //大根堆
@@ -3035,9 +3412,9 @@ for(int j=1;j<=m;j++)
 
 ***
 
-+ 强正则图：与任意两个相邻的点相邻的点数相同，与任意两个不相邻的点相邻的点数相同的正则图
-+ 强正则图的点数 $v$，度 $k$，相邻的点的共度 $\lambda$，不相邻的点的共度 $\mu$ 有 $k(k-1-\lambda)=\mu(v-1-k)$
-+ 强正则图的例子：所有完全图、所有nk顶点满n分图
+- 强正则图：与任意两个相邻的点相邻的点数相同，与任意两个不相邻的点相邻的点数相同的正则图
+- 强正则图的点数 $v$，度 $k$，相邻的点的共度 $\lambda$，不相邻的点的共度 $\mu$ 有 $k(k-1-\lambda)=\mu(v-1-k)$
+- 强正则图的例子：所有完全图、所有nk顶点满n分图
 
 ***
 
@@ -3060,10 +3437,14 @@ for(int j=1;j<=m;j++)
 
 ***
 
-+ 哈密顿通路：通过所有顶点有且仅有一次的路径，若存在则为半哈密顿图/哈密顿图
-+ 哈密顿回路：通过所有顶点有且仅有一次的回路，若存在则为哈密顿图
-+ 完全图 $K_{2k+1}$ 的边集可以划分为 $k$ 个哈密顿回路
-+ 完全图 $K_{2k}$ 的边集去掉 $k$ 条互不相邻的边后可以划分为 $k-1$ 个哈密顿回路
+- 哈密顿通路：通过所有顶点有且仅有一次的路径，若存在则为半哈密顿图/哈密顿图
+- 哈密顿回路：通过所有顶点有且仅有一次的回路，若存在则为哈密顿图
+- 完全图 $K_{2k+1}$ 的边集可以划分为 $k$ 个哈密顿回路
+- 完全图 $K_{2k}$ 的边集去掉 $k$ 条互不相邻的边后可以划分为 $k-1$ 个哈密顿回路
+
+***
+
+- 连通块数 = 点数 - 边数
 
 ***
 
@@ -3115,6 +3496,53 @@ void toposort(int n){
 - 有向图dfs树：树边、返祖边、横叉边、前向边
 - 无向图bfs树：树边、返祖边、横叉边
 - 空缺
+
+## 线段树优化建图
+
+- 建两棵线段树，第一棵每个结点连向其左右儿子，第二棵每个结点连向其父亲，两棵树所有叶子对应连无向边
+- add(x1,y1,x2,y2,w) 表示 $[x_1,y_1]$ 每个结点向 $[x_2,y_2]$ 每个结点连 $w$ 边
+- $a[i+tr.n]$ 表示结点 $i$
+- 建议 $10$ 倍内存，编号从 $0$ 开始，$O(n\log n)$
+
+```c++
+typedef vector<pii> node;
+node a[N]; int top;
+struct seg{
+	int n;
+	void init(int inn){
+		for(n=1;n<inn;n<<=1); top=n*4;
+		repeat(i,0,n*4)a[i].clear();
+		repeat(i,1,n){
+			a[i]<<pii(i*2,0);
+			a[i]<<pii(i*2+1,0);
+			a[i*2+n*2]<<pii(i+n*2,0);
+			a[i*2+1+n*2]<<pii(i+n*2,0);
+		}
+		repeat(i,0,inn){
+			a[i+n]<<pii(i+n*3,0);
+			a[i+n*3]<<pii(i+n,0);
+		}
+	}
+	void b_add(int l,int r,int x,int w){
+		for(l+=n-1,r+=n+1;l^r^1;l>>=1,r>>=1){
+			if(~l & 1)a[(l^1)+n*2]<<pii(x,w);
+			if(r & 1)a[(r^1)+n*2]<<pii(x,w);
+		}
+	}
+	void a_add(int l,int r,int x,int w){
+		for(l+=n-1,r+=n+1;l^r^1;l>>=1,r>>=1){
+			if(~l & 1)a[x]<<pii(l^1,w);
+			if(r & 1)a[x]<<pii(r^1,w);
+		}
+	}
+}tr;
+void add(int x1,int y1,int x2,int y2,int w){
+	int s=top++; a[s].clear();
+	tr.b_add(x1,y1,s,w);
+	tr.a_add(x2,y2,s,0);
+}
+int f(int x){return x+tr.n;}
+```
 
 ## 最短路径
 
@@ -3267,6 +3695,31 @@ int mincycle(){
 }
 ```
 
+### 差分约束
+
+- $a_i-a_j\le c$，建边 $(j,i,c)$
+
+### 同余最短路
+
+- $k$ 种木棍，每种木棍个数不限，长度分别为 $l_i$，求这些木棍可以拼凑出多少小于等于 $h$ 的整数（包括 $0$）
+- 以任一木棍 $n=l_0$ 为剩余系，连边 $(i,(i+l_j)\%n,l_j),j>1$，跑最短路后 $dis[i]$ 表示 $dis[i]+tn,t∈\N$ 都可以被拼凑出来
+- 编号从 $0$ 开始，$O(nk\log(nk))$
+
+```c++
+ll solve(ll h,int l[],int k){
+	n=l[0];
+	repeat(i,0,n)
+	repeat(j,1,k)
+		a[i]<<pii((i+l[j])%n,l[j]);
+	dij(0);
+	ll ans=0;
+	repeat(i,0,n)
+	if(dis[i]<=h)
+		ans+=(h-dis[i])/n+1;
+	return ans;
+}
+```
+
 ## 最小生成树×MST
 
 ### Kruskal
@@ -3277,7 +3730,7 @@ int mincycle(){
 DSU d;
 struct edge{int u,v,dis;}e[200010];
 ll kru(){
-	ll ans=0,cnt=0;
+	ll ans=0,cnt=0; d.init(n);
 	sort(e,e+m);
 	repeat(i,0,m){
 		int x=d[e[i].u],y=d[e[i].v];
@@ -3377,12 +3830,58 @@ ll solve(int rt){ //返回最小的边权和，返回-1表示没有树形图
 }
 ```
 
+### 绝对中心+最小直径生成树×MDST
+
+- 绝对中心：到所有点距离最大值最小的点，可以在边上
+- 最小直径生成树：直径最小的生成树，可构造绝对中心为根的最短路径树
+- 返回绝对中心所在边，生成树直径为 $d[x][rk[x][n-1]]+d[y][rk[y][n-1]]-d[x][y]$
+- 编号从 $0$ 开始，$O(n^3)$，$n=1000$ 勉强能过
+
+```c++
+int rk[N][N],d[N][N];
+pii solve(int g[][N],int n){
+	lf ds1=0,ds2=0;
+	repeat(i,0,n)repeat(j,0,n)d[i][j]=g[i][j];
+	repeat(k,0,n)repeat(i,0,n)repeat(j,0,n)
+		d[i][j]=min(d[i][j],d[i][k]+d[k][j]);
+	repeat(i,0,n){
+		iota(rk[i],rk[i]+n,0);
+		sort(rk[i],rk[i]+n,[&](int a,int b){
+			return d[i][a]<d[i][b];
+		});
+	}
+	int ans=inf,s1=-1,s2=-1;
+	repeat(x,0,n){
+		if(d[x][rk[x][n-1]]*2<ans){
+			ans=d[x][rk[x][n-1]]*2;
+			s1=s2=x; ds1=ds2=0;
+		}
+		repeat(y,0,n){
+			if(g[x][y]==inf)continue;
+			int k=n-1;
+			repeat_back(i,0,n-1)
+			if(d[y][rk[x][i]]>d[y][rk[x][k]]){
+				int now=d[x][rk[x][i]]+d[y][rk[x][k]]+g[x][y];
+				if(now<ans){
+					ans=now; s1=x,s2=y;
+					ds1=0.5*now-d[x][rk[x][i]];
+					ds2=g[x][y]-ds1;
+				}
+				k=i;
+			}
+		}
+	}
+	return {s1,s2};
+}
+//init: repeat(i,0,n)repeat(j,0,n)g[i][j]=inf*(i!=j);
+```
+
 ## 树论
 
 ### 树的直径
 
 - 直径：即最长路径
-- 求直径：以任意一点出发所能达到的最远节点为一个端点，以这个端点出发所能达到的最远节点为另一个端点（也可以树上dp）
+- 求直径：以任意一点出发所能达到的最远结点为一个端点，以这个端点出发所能达到的最远结点为另一个端点（也可以树上dp）
 
 ### 树的重心
 
@@ -3716,11 +4215,17 @@ void dfs(int x){
 	for(auto i:a[x]){ //这部分进一步分治
 		int p=i.fi;
 		if(!vis[p]){
-			dfs(p); 
+			dfs(p);
 		}
 	}
 }
 ```
+
+### 树哈希
+
+- $\displaystyle Hash[u]=sz[u]\sum_{v_i} Hash[v_i]B^{i-1}$（$v_i$ 根据哈希值排序）
+- $\displaystyle Hash[u]=\oplus(C\cdot Hash[v_i]+sz[v_i])$
+- $\displaystyle Hash[u]=1+\sum_{v_i}Hash[v_i]\cdot prime[sz[v_i]]$
 
 ## 联通性相关
 
@@ -3835,7 +4340,7 @@ void dfs(int x,bool isroot=1){
 		}
 		low[x]=min(low[x],dfn[p]);
 	}
-	if(isroot && ch>=2) //根节点判断方法
+	if(isroot && ch>=2) //根结点判断方法
 		cut[x]=1;
 }
 ```
@@ -3890,6 +4395,63 @@ struct twosat{ //暴力版
 - SCC缩点版，$O(V+E)$，空缺
 - 2-SAT计数
 - 空缺（太恐怖了）
+
+## 支配树 | Lengauer−Tarjan算法
+
+- 有向图给定源点，若删掉 $r$，源点不可达 $u$，则称 $r$ 是 $u$ 的支配点
+- 支配树即所有非源点的点与最近支配点(idom)连边形成的树（源点为根）
+
+```c++
+vector<int> a[N],b[N],tr[N]; //tr: result
+int fa[N],dfn[N],dcnt,arcdfn[N];
+int c[N],best[N],sm[N],im[N]; //im: result
+void init(int n){
+	dcnt=0;
+	iota(c,c+n+1,0);
+	repeat(i,1,n+1){
+		tr[i].clear();
+		a[i].clear();
+		b[i].clear();
+	}
+	repeat(i,1,n+1)sm[i]=best[i]=i;
+	fill(dfn,dfn+n+1,0);
+}
+void dfs(int u){
+	dfn[u]=++dcnt; arcdfn[dcnt]=u;
+	for(auto v:a[u])if(!dfn[v]){fa[v]=u; dfs(v);}
+}
+int find(int x){
+	if(c[x]==x)return x;
+	int &f=c[x],rt=find(f);
+	if(dfn[sm[best[x]]]>dfn[sm[best[f]]])
+		best[x]=best[f];
+	return f=rt;
+}
+void solve(int s){
+	dfs(s);
+	repeat_back(i,2,dcnt+1){
+		int x=arcdfn[i],mn=dcnt+1;
+		for(auto u:b[x]){
+			if(!dfn[u])continue;
+			find(u); mn=min(mn,dfn[sm[best[u]]]);
+		}
+		c[x]=fa[x];
+		tr[sm[x]=arcdfn[mn]]<<x;
+		x=arcdfn[i-1];
+		for(auto u:tr[x]){
+			find(u);
+			if(sm[best[u]]!=x)im[u]=best[u];
+			else im[u]=x;
+		}
+		tr[x].clear();
+	}
+	repeat(i,2,dcnt+1){
+		int u=arcdfn[i];
+		if(im[u]!=sm[u])im[u]=im[im[u]];
+		tr[im[u]]<<u;
+	}
+}
+```
 
 ## 图上的NP问题
 
@@ -4035,8 +4597,8 @@ int solve(){ //返回最小染色数
 
 ***
 
-+ 最大势算法MCS求完美消除序列：每次求出与 $[v_{i+1},...,v_n]$ 相邻点数最大的点作为 $v_i$
-+ `e[][]`点编号从 $1$ 开始！`rec` 下标从 $1$ 开始！桶优化，$O(V+E)$
+- 最大势算法MCS求完美消除序列：每次求出与 $[v_{i+1},...,v_n]$ 相邻点数最大的点作为 $v_i$
+- `e[][]`点编号从 $1$ 开始！`rec` 下标从 $1$ 开始！桶优化，$O(V+E)$
 
 ```c++
 vector<int> e[N];
@@ -4171,7 +4733,7 @@ int cliquecnt(){ //返回极大团数
 - 仙人掌：每条边至多属于一个简单环的无向联通图
 - 圆方树：原来的点称为圆点，每个环新建一个方点，环上的圆点都与方点连接
 - 子仙人掌：以 $r$ 为根，点 $p$ 的子仙人掌是删掉 $p$ 到 $r$ 的所有简单路径后 $p$ 所在的联通块。这个子仙人掌就是圆方树中以 $r$ 为根时，$p$ 子树中的所有圆点
-- 仙人掌的判定（树上差分）编号从哪开始都可以，$O(n+m)$
+- 仙人掌的判定（dfs树上差分）编号从哪开始都可以，$O(n+m)$
 
 ```c++
 vector<int> a[N]; //vector<int> rec; //rec存每个环的大小
@@ -4209,9 +4771,9 @@ bool iscactus(int s){
 
 ***
 
-+ 霍尔定理：最大匹配 = 左顶点数 $\Leftrightarrow$ 所有左顶点子集 $S$ 都有 $|S|\le|\omega(S)|$ ，$\omega(S)$ 是 $S$ 的领域
-+ 运用：若在最大匹配中有 $t$ 个左顶点失配，因此最大匹配 = 左顶点数 - $t$
-+ 对任意左顶点子集 $S$ 都有 $|S|\le|\omega(S)|+t$，$t\ge|S|-|\omega(S)|$ ，求右式最大值即可求最大匹配
+- 霍尔定理：最大匹配 = 左顶点数 $\Leftrightarrow$ 所有左顶点子集 $S$ 都有 $|S|\le|\omega(S)|$ ，$\omega(S)$ 是 $S$ 的领域
+- 运用：若在最大匹配中有 $t$ 个左顶点失配，因此最大匹配 = 左顶点数 - $t$
+- 对任意左顶点子集 $S$ 都有 $|S|\le|\omega(S)|+t$，$t\ge|S|-|\omega(S)|$ ，求右式最大值即可求最大匹配
 
 ***
 
@@ -4491,7 +5053,7 @@ puts(solve()*2==cnt?"Yes":"No");
 
 ***
 
-+ 费用流（最小费用最大流）：保证最大流后的最小费用
+- 费用流（最小费用最大流）：保证最大流后的最小费用
 
 ***
 
@@ -4653,19 +5215,19 @@ void add(int x,int y,int w){flow.ae(x,y,w),flow.ae(y,x,0);}
 - MCMF，单路增广，$O(VE^2)$
 
 ```c++
-struct FLOW{ //MCMF费用流
-	struct edge{int to,w,cost,nxt;}; //指向，限流，费用，下一条边
-	vector<edge> a; int head[N]; //前向星
-	int n,s,t,totcost; //点数，源点，汇点，总费用
+struct FLOW{
+	struct edge{int to,w,cost,nxt;};
+	vector<edge> a; int head[N];
+	int n,s,t,totcost;
 	deque<int> q;
-	bool inque[N]; //在队里的不需要入队
-	int dis[N]; //费用
-	struct{int to,e;}pre[N]; //路径的前一个点，这条边的位置
+	bool inque[N];
+	int dis[N];
+	struct{int to,e;}pre[N];
 	void ae(int x,int y,int w,int cost){
 		a.push_back((edge){y,w,cost,head[x]});
 		head[x]=a.size()-1;
 	}
-	bool spfa(){ //已死的算法
+	bool spfa(){
 		fill(dis,dis+n,inf); dis[s]=0;
 		q.assign(1,s);
 		while(!q.empty()){
@@ -4682,7 +5244,6 @@ struct FLOW{ //MCMF费用流
 						&& dis[q.front()]<=dis[p])
 							q.push_back(p);
 						else q.push_front(p);
-						//松弛，或者直接q.push_back(p);
 					}
 				}
 			}
@@ -4734,7 +5295,7 @@ void matrix::addedge(int x,int y){
 }
 lf matrix::treecount(){
 	//for(auto i:eset)addedge(i.fi,i.se); //加边
-	n--,m=n; //a[n-1][n-1]的余子式（选任一节点均可）
+	n--,m=n; //a[n-1][n-1]的余子式（选任一结点均可）
 	return get_det();
 }
 ```
@@ -4752,7 +5313,7 @@ void matrix::addedge(int x,int y){
 }
 ll matrix::treecount(){
 	//for(auto i:eset)addedge(i.fi,i.se); //加边
-	repeat(i,s,n) //s是根节点
+	repeat(i,s,n) //s是根结点
 	repeat(j,0,n)
 		a[i][j]=a[i+1][j];
 	repeat(i,0,n)
@@ -4811,7 +5372,7 @@ ll matrix::treecount(){
 - 支持查询子串hash值，初始化 $O(n)$，子串查询 $O(1)$
 
 ```c++
-const int hashxor=rnd()%1000000000; //如果不是cf可以不用hashxor
+const int hashxor=101;
 struct Hash{
 	vector<ll> a[2],p[2];
 	const ll b=257,m[2]={1000000007,998244353};
@@ -5034,35 +5595,125 @@ for(int i=1,k=0;i<=n;i++){
 
 ```c++
 struct trie{
-	int a[N][26],cnt[N],t;
-	void init(){
-		t=0; add();
-	}
-	int add(){
-		mst(a[t],0);
-		cnt[t]=0;
-		return t++;
-	}
+	struct node{
+		int to[26],cnt;
+		int &operator[](int n){return to[n];}
+	}a[N];
+	int t;
+	void init(){t=0; a[t++]=node();}
 	void insert(const char s[]){
 		int k=0;
 		for(int i=0;s[i];i++){
-			int c=s[i]-'a'; //小写字母
-			if(!a[k][c])a[k][c]=add();
+			int c=s[i]-'a'; //small letter
+			if(!a[k][c])a[k][c]=t,a[t++]=node();
 			k=a[k][c];
-			//son[k]++; //如果要记录子树大小
+			//a[k].son++; //子树大小
 		}
-		cnt[k]++;
+		a[k].cnt++;
 	}
 	int query(const char s[]){
 		int k=0;
 		for(int i=0;s[i];i++){
-			int c=s[i]-'a'; //小写字母
+			int c=s[i]-'a'; //small letter
 			if(!a[k][c])return 0;
 			k=a[k][c];
 		}
-		return cnt[k];
+		return a[k].cnt;
 	}
 }t;
+```
+
+- 最小异或生成树，01字典树×01-trie
+- 归并，$O(n\log^2n)$
+
+```c++
+struct trie{
+	static const int B=30;
+	struct node{
+		int to[2];
+		int &operator[](int n){return to[n];}
+	}a[N];
+	int t;
+	void init(){t=0; a[t++]=node();}
+	void insert(ll s){
+		int k=0;
+		repeat_back(i,0,B){
+			int c=(s>>i)&1;
+			if(!a[k][c])a[k][c]=t,a[t++]=node();
+			k=a[k][c];
+		}
+	}
+	ll query(ll s){ //the min value in {s^t | t in trie}
+		int k=0; ll ans=0;
+		repeat_back(i,0,B){
+			int c=(s>>i)&1;
+			if(!a[k][c])c^=1,ans^=1ll<<i;
+			k=a[k][c];
+		}
+		return ans;
+	}
+}t;
+int a[N],n; ll ans;
+void merge(int l,int r,ll s){
+	if(s==0 || l>=r-1)return;
+	int m=lower_bound(a+l,a+r,s)-a;
+	if(l<m && m<r){
+		t.init(); ll mn=INF;
+		repeat(i,l,m)t.insert(a[i]);
+		repeat(i,m,r)mn=min(mn,t.query(a[i]));
+		ans+=mn;
+	}
+	repeat(i,m,r)a[i]^=s;
+	merge(l,m,s>>1); merge(m,r,s>>1);
+}
+void solve(){
+	sort(a,a+n);
+	merge(0,n,1ll<<31);
+}
+```
+
+- 可持久化字典树，查询与 $s$ 异或后的序列的区间最大值
+
+```c++
+struct trie{
+	static const int B=30;
+	struct node{
+		int to[2]; int lst;
+		int &operator[](int n){return to[n];}
+	}a[N];
+	int t;
+	int clone(int k){a[t]=a[k]; return t++;}
+	int init(){t=1; return ins(0,0,0);}
+	int ins(int rt,ll s,int lst){
+		int k=rt=clone(rt);
+		repeat_back(i,0,B){
+			int c=(s>>i)&1;
+			a[k][c]=clone(a[k][c]);
+			k=a[k][c];
+			a[k].lst=max(a[k].lst,lst);
+		}
+		return rt;
+	}
+	ll q(int rt,ll s,int lst){ //the max value in {s^t | t in trie}
+		int k=rt; ll ans=0;
+		repeat_back(i,0,B){
+			int c=(s>>i)&1; c^=1,ans^=1ll<<i;
+			if(!a[k][c] || a[a[k][c]].lst<lst)c^=1,ans^=1ll<<i;
+			k=a[k][c];
+		}
+		return ans;
+	}
+}tr;
+int h[N],top;
+int query(int l,int r,int s){
+	return tr.q(h[r],s,l);
+}
+void push_back(int s){
+	top++; h[top]=tr.ins(h[top-1],s,top);
+}
+void init(){
+	top=0; h[0]=tr.init();
+}
 ```
 
 ### AC自动机
@@ -5264,8 +5915,8 @@ void write(ll x){ //可能不比printf快
 
 ```c++
 char getc(){ //代替getchar，用了这个就不能用其他读入函数如scanf
-    static char now[1<<16],*S,*T;
-    if(T==S){T=(S=now)+fread(now,1,1<<16,stdin); if(T==S)return EOF;}
+	static char now[1<<16],*S,*T;
+	if(T==S){T=(S=now)+fread(now,1,1<<16,stdin); if(T==S)return EOF;}
 	return *S++;
 }
 ```
@@ -5291,12 +5942,6 @@ struct allc:allocator<T>{
 	void deallocate(T* p,size_t n){}
 };
 vector< int,allc<int> > a;
-```
-
-<H3>吸氧气</H3>
-
-```c++
-#pragma GCC optimize(2) //(3),("Ofast")
 ```
 
 <H3>其他优化</H3>
@@ -5365,26 +6010,30 @@ int main(){
 }
 ```
 
-## 战术分析 坑点
+## 战术分析
+
+### 坑点
 
 （~~我真的真的真的太南了~~）
 
-```
-ll t; 1<<t返回int，必须是1ll<<t
-int x; x<<y的y会先对32取模
-operator<的比较内容一定要写完整
-试一试输入^Z能否结束
-无向图输入要给两个值赋值g[x][y]=g[x][y]=1
-多组输入时，图记得初始化
-建模的转换函数的宏定义一定要加括号，或者写成函数
-多想想极端数据！！
-islower()等函数返回值不一定是0或1
-多用相空间角度思考问题
-内存比我想象的要大一些（有时候1e7可以塞下）
-在64位编译器（我的编译器）中set每个元素需要额外32字节内存
-struct里放大数组，最好用vector代替
-deque占用很大很大的内存
-```
+- `ll t;` `1<<t` 返回int，必须是 `1ll<<t`
+- `int x;` `x<<y` 的 $y$ 会先对 $32$ 取模
+- `operator<` 的比较内容要写完整
+- 试一试输入 `^Z` 能否结束
+- 无向图输入时每条边要给两个值赋值 `g[x][y]=g[x][y]=1`
+- 多组输入时，图记得初始化
+- 建模的转换函数的宏定义一定要加括号，或者写成函数
+- 多想想极端数据！！
+- islower()等函数返回值不一定是0或1
+- 多用相空间角度思考问题
+- 内存比我想象的要大一些（有时候1e7可以塞下）
+- 在64位编译器（我的编译器）中set每个元素需要额外32字节内存
+- struct里放大数组，最好用vector代替
+
+### 算法
+
+- $x,y$ 异或的二进制 $1$ 的个数 `popcount(x^y)`，相当于，把 $x,y$ 看作超立方体的顶点，这两个点的最短路径。超立方体顶点 $x$ 的连边是 `(x,x^(1ll<<i))`（例：popcount(x^y)为边权，求最小生成树。bfs处理与超立方体上顶点x最近的实点from[x]，对超立方体每个边(x,y)都生成一个边(from[x],from[y])，然后kruskal）
+- 对于重复出现视为出现一次的题，pre[i]表示最大的j满足a[j]=a[i],j<i
 
 # 数学
 
@@ -5597,7 +6246,7 @@ ll getG(ll n){ //求n最小的原根
 		}
 		if(f)return i;
 	}
-	return -1; 
+	return -1;
 }
 ```
 
@@ -5817,9 +6466,43 @@ int main() {
 }
 ```
 
+- 求 $[1,n]$ 内的素数之和
+
+```c++
+namespace Min25 {
+	int prime[N],id1[N],id2[N],flag[N],cnt,m;
+	ll g[N],sum[N],a[N],T,n;
+	int ID(ll x){return x<=T?id1[x]:id2[n/x];}
+	ll getsum(ll x){return x*(x+1)/2-1;}
+	ll f(ll x){return x;}
+	void work(){
+		T=sqrt(n+0.5);cnt=0;fill(flag,flag+T+1,0);m=0;
+		for(int i=2;i<=T;i++){
+			if(!flag[i]) prime[++cnt]=i,sum[cnt]=sum[cnt-1]+i;
+			for(int j=1;j<=cnt && i*prime[j]<=T;j++){
+				flag[i*prime[j]]=1;
+				if(i%prime[j]==0) break;
+			}
+		}
+		for(ll l=1;l<=n;l=n/(n/l)+1){
+			a[++m]=n/l;
+			if(a[m]<=T)id1[a[m]]=m;else id2[n/a[m]]=m;
+			g[m]=getsum(a[m]);
+		}
+		for(int i=1;i<=cnt;i++)
+			for(int j=1;j <= m && 1ll*prime[i]*prime[i]<=a[j];j++)
+				g[j]=g[j]-1ll*prime[i]*(g[ID(a[j]/prime[i])]-sum[i-1]);
+	}
+	ll solve(ll x){
+		if(x<=1) return x;
+		return n=x,work(),g[ID(n)];
+	}
+}
+```
+
 ### 素数约数相关
 
-#### 唯一分解
+#### 唯一分解 质因数分解
 
 - 用数组表示数字唯一分解式的素数的指数，如 $50=\{1,0,2,0,…\}$
 - 可以用来计算阶乘和乘除操作
@@ -5837,7 +6520,7 @@ void fac(int a[],ll n){
 ```c++
 struct fac{
 	#define facN 1010
-	ll a[facN]; set<ll> s;
+	ll a[facN]; set<ll> s; //乘法就是multiset
 	fac(){mst(a,0); s.clear();}
 	void lcm(ll n){ //self=lcm(self,n)
 		repeat(i,2,facN)
@@ -5955,10 +6638,10 @@ void dfs(ll num=1,ll cnt=1,int *p=pri,int pre=inf){ //注意ans要初始化
 
 - $n$ 以内约数个数最大值是 $O(n^{\tfrac {1.066}{\ln\ln n}})$
 
-|      范围      | 1e4  |  1e5  |  1e6   |    1e9    |       1e16       |
+| 范围 | 1e4 | 1e5 | 1e6 | 1e9 | 1e16 |
 | :------------: | :--: | :---: | :----: | :-------: | :--------------: |
-|   最大反素数   | 7560 | 83160 | 720720 | 735134400 | 8086598962041600 |
-| 反素数约数个数 |  64  |  128  |  240   |   1344    |      41472       |
+| 最大反素数 | 7560 | 83160 | 720720 | 735134400 | 8086598962041600 |
+| 反素数约数个数 | 64 | 128 | 240 | 1344 | 41472 |
 
 ### 数论杂项
 
@@ -5982,6 +6665,27 @@ for(int l=l0,r;l<=r0;l=r+1){
 	r=min(r0,n/(n/l)); if(n%r==0)r=max(r-1,l);
 	//c=(n+l-1)/l;
 	//len=l-r+1;
+}
+```
+
+#### 高斯整数
+
+- 高斯整数：$\{a+bi\ |\ a,b∈\Z\}$
+- 高斯素数：无法分解为两个高斯整数 $\not∈\{\pm1,\pm i\}$ 之积的高斯整数
+- $a+bi$ 是高斯素数当前仅当
+	- $a,b$ 一个为 $0$，另一个绝对值为 $4k+3$ 型素数
+	- $a^2+b^2$ 为 $4k+1$ 型素数或 $2$
+- 带余除法
+
+```c++
+vec operator/(vec a,vec b){
+	double x=b.x*b.x+b.y*b.y;
+	return {llround((a.x*b.x+a.y*b.y)/x),llround((a.y*b.x-a.x*b.y)/x)};
+}
+vec operator%(vec a,vec b){return a-a/b*b;}
+vec gcd(vec a,vec b){
+	while(b.x || b.y)a=a%b,swap(a,b);
+	return a;
 }
 ```
 
@@ -6346,8 +7050,7 @@ cout<<ans/cnt<<endl;
 
 ***
 
-<H4> 组合数 </H4>
-
+- 组合数
 - `C(n,k)=(n-k+1)*C(n,k-1)/k​`
 
 ```c++
@@ -6359,8 +7062,12 @@ repeat(i,0,N){
 ```
 
 - 二项式反演
-- $\displaystyle f_n=\sum_{i=0}^n{n\choose i}g_i\Leftrightarrow g_n=\sum_{i=0}^n(-1)^{n-i}{n\choose i}f_i$
-- $\displaystyle f_k=\sum_{i=k}^n{i\choose k}g_i\Leftrightarrow g_k=\sum_{i=k}^n(-1)^{i-k}{i\choose k}f_i$
+	- $\displaystyle f_n=\sum_{i=0}^n{n\choose i}g_i\Leftrightarrow g_n=\sum_{i=0}^n(-1)^{n-i}{n\choose i}f_i$
+	- $\displaystyle f_k=\sum_{i=k}^n{i\choose k}g_i\Leftrightarrow g_k=\sum_{i=k}^n(-1)^{i-k}{i\choose k}f_i$
+- $\displaystyle \sum_{i=1}^{n}i{n\choose i}=n 2^{n-1}$
+- $\displaystyle \sum_{i=1}^{n}i^2{n\choose i}=n(n+1) 2^{n-2}$
+- $\displaystyle \sum_{i=1}^{n}\dfrac{1}{i}{n\choose i}=\sum_{i=1}^{n}\dfrac{1}{i}$
+- $\displaystyle \sum_{i=0}^{n}{n\choose i}^2={2n\choose n}$
 
 ***
 
@@ -6393,8 +7100,7 @@ repeat(i,0,N-1){
 
 ***
 
-<H4>第一类斯特林数×Stirling</H4>
-
+- 第一类斯特林数×Stirling
 - 多项式 $x(x-1)(x-2) \cdots (x-n+1)$ 展开后 $x^r$ 的系数绝对值记作 $s(n,r)$ （系数符号 $(-1)^{n+r}$）
 - 也可以表示 $n$ 个元素分成 $r$ 个环的方案数
 - 递推式 $s(n,r) = (n-1)s(n-1,r)+s(n-1,r-1)$
@@ -6404,8 +7110,7 @@ repeat(i,0,N-1){
 
 ***
 
-<H4>第二类斯特林数×Stirling</H4>
-
+- 第二类斯特林数×Stirling
 - $n$ 个不同的球放入 $r$ 个相同的盒子且无空盒的方案数，记作 $S(n,r)$ 或 $S_n^r$
 - 递推式 $S(n,r) = r S(n-1,r) + S(n-1,r-1)$
 - 通项公式 $\displaystyle S(n,r)=\frac{1}{r!}\sum_{i=0}^r(-1)^i{r\choose i}(r-i)^n$
@@ -6530,14 +7235,11 @@ int calc(ll n,int k){ //n<=1e8,k<=1e5
 	}
 	while(a[t]>n)t--;
 	if(a[t]==n)return -1;
-	else{
-		while(n){
-			while(a[t]>n)t--;
-			n-=a[t];
-			ans=a[t];
-		}
-		return ans;
+	while(n){
+		while(a[t]>n)t--;
+		n-=a[t]; ans=a[t];
 	}
+	return ans;
 }
 ```
 
@@ -6685,10 +7387,14 @@ ll calc(int x,int y){ //get surreal number
 
 ***
 
-Untitled
-
 - 1到n，每次拿一个数或差值为1的两个数
-- 先手必胜，第一步拿最中间的1/2个数，之后对称操作
+	- 先手必胜，第一步拿最中间的1/2个数，之后对称操作
+- $n\times m$ 棋盘上两个棋子，每次双方可以操控自己的棋子移动到同一行/列的位置，不能经过对方棋子所在行/列
+	- 后手必胜当且仅当两个棋子的横坐标之差等于纵坐标之差
+- 2个数字，每次把一个数字减少，最小1，但是不能出现重复数字
+	- $SG(a,b)=((a-1)\oplus(b-1))-1$
+- 3个数字，每次把一个数字减少，最小1，但是不能出现重复数字
+	- 后手必胜当且仅当 $a\oplus b\oplus c=0$
 
 ***
 
@@ -6735,6 +7441,8 @@ repeat(i,0,n)if(!vis[i]){
 
 ### 多项式
 
+技能树：拉格朗日反演，多项式开根、快速幂、除法、三角反三角，分治FFT，快速插值和多点求值
+
 #### 拉格朗日插值
 
 - 函数曲线通过n个点 $(x_i,y_i)$，求 $f(k)$
@@ -6742,21 +7450,65 @@ repeat(i,0,n)if(!vis[i]){
 - $O(n^2)$
 
 ```c++
-repeat(i,0,n)x[i]%=mod,y[i]%=mod;
-repeat(i,0,n){
-	s1=y[i];
-	s2=1;
-	repeat(j,0,n)
-	if(i!=j){
-		s1=s1*(k-x[j])%mod;
-		s2=s2*(x[i]-x[j])%mod;
+ll solve(int n,int x0){
+	ll ans=0; x0%=mod;
+	repeat(i,0,n)x[i]%=mod,y[i]%=mod;
+	repeat(i,0,n){
+		int s1=y[i],s2=1;
+		repeat(j,0,n)
+		if(i!=j){
+			s1=s1*(x0-x[j])%mod;
+			s2=s2*(x[i]-x[j])%mod;
+		}
+		ans=(ans+s1*qpow(s2,mod-2)%mod+mod)%mod;
 	}
-	ans=(ans+s1*getinv(s2)%mod+mod)%mod;
+	return ans;
 }
 ```
 
-#### 快速傅里叶变换+任意模数
+```c++
+ll solve(int n,int x0){ //(i,y[i]),i=1..n的优化
+	ll ans=0,up=1; x0%=mod;
+	if(x0>=1 && x0<=n)return y[x0];
+	repeat(i,1,n+1)
+		up=up*(x0-i)%mod;
+	repeat(i,1,n+1){
+		ans+=y[i]*up%mod*qpow((x0-i)*((n+i)%2?-1:1)*C.fac[i-1]%mod*C.fac[n-i]%mod,mod-2)%mod;
+	}
+	return ans%mod;
+}
+```
 
+#### 多项式基本操作
+
+```c++
+inline ll D(ll x){return x>=mod?x-mod:x<0?x+mod:x;}
+inline ll &ad(ll &x){return x=D(x);}
+int polyinit(ll a[],int n1){
+	int n=1; while(n<n1)n<<=1;
+	fill(a+n1,a+n,0);
+	return n;
+}
+void polyddx(ll a[],int n,ll b[]){ //b=da/dx
+	repeat(i,1,n)b[i-1]=i*a[i]%mod; b[n-1]=0;
+}
+void polycal(ll a[],int n,ll b[]){ //b=∫adx
+	repeat_back(i,1,n)b[i]=qpow(i,mod-2)*a[i-1]%mod; b[0]=0;
+}
+void polymul_special(ll a[],ll b[],int n,ll c[]){ //c[i]=a[j]*b[k],i=j*k
+	fill(c,c+n,0);
+	repeat(i,0,n)
+	repeat(j,0,n){
+		if(i*j>=n)break;
+		(c[i*j]+=a[i]*b[j])%=mod;
+	}
+}
+```
+
+#### 快速傅里叶变换×FTT+任意模数
+
+- 离散傅里叶变换(DFT)即求 $(\omega_n^k,f(\omega_n^k))$，多项式 $\displaystyle d_k=\sum_{i=0}^{n-1}a_i(\omega_n^k)^i$
+- 离散傅里叶反变换(IDFT)即求多项式 $(\omega_n^{-k},g(\omega_n^{-k}))$，多项式 $\displaystyle c_k=\sum_{i=0}^{n-1}d_i(\omega_n^{-k})^i$，最后 $a_i=\dfrac {c_i}{n}$
 - 求两个多项式的卷积，$O(n\log n)$
 
 ```c++
@@ -6796,19 +7548,19 @@ struct FFT{
 	#ifdef CONV
 	cp a[N],b[N];
 	vector<ll> conv(const vector<ll> &u,const vector<ll> &v){ //一般fft
-	    const int n=(int)u.size()-1,m=(int)v.size()-1;
-	    const int k=32-__builtin_clz(n+m+1),s=1<<k;
+		const int n=(int)u.size()-1,m=(int)v.size()-1;
+		const int k=32-__builtin_clz(n+m+1),s=1<<k;
 		g[0]=0; repeat(i,1,s)g[i]=(g[i/2]/2)|((i&1)<<(k-1));
 		repeat(i,0,s){
 			a[i]=cp(i<=n?u[i]:0,0);
 			b[i]=cp(i<=m?v[i]:0,0);
 		}
-	    dft(a,s,1); dft(b,s,1);
+		dft(a,s,1); dft(b,s,1);
 		repeat(i,0,s)a[i]=a[i]*b[i];
-	    dft(a,s,-1);
-	    vector<ll> ans;
-	    repeat(i,0,n+m+1)ans+=llround(a[i].a);
-	    return ans;
+		dft(a,s,-1);
+		vector<ll> ans;
+		repeat(i,0,n+m+1)ans<<llround(a[i].a);
+		return ans;
 	}
 	#endif
 	#ifdef CONV_MOD
@@ -6849,32 +7601,159 @@ struct FFT{
 }fft;
 ```
 
-#### 多项式的一些概念
+#### 快速数论变换×NTT
 
-***
+```c++
+//const ll mod=998244353;
+void ntt(ll a[],ll n,ll op){
+	for(int i=1,j=n>>1;i<n-1;++i){
+		if(i<j)swap(a[i],a[j]);
+		int k=n>>1;
+		while(k<=j)j-=k,k>>=1;
+		j+=k;
+	}
+	for(int len=2;len<=n;len<<=1){
+		ll rt=qpow(3,(mod-1)/len);
+		for(int i=0;i<n;i+=len){
+			ll w=1;
+			repeat(j,i,i+len/2){
+				ll u=a[j],t=1ll*a[j+len/2]*w%mod;
+				a[j]=D(u+t),a[j+len/2]=D(u-t);
+				w=1ll*w*rt%mod;
+			}
+		}
+	}
+	if(op==-1){
+		reverse(a+1,a+n);
+		ll in=qpow(n,mod-2);
+		repeat(i,0,n)a[i]=1ll*a[i]*in%mod;
+	}
+}
+void conv(ll a[],ll b[],int n,ll c[],const function<ll(ll,ll)> &f=[](ll a,ll b){return a*b%mod;}){ //n=2^k
+	//n*=2; fill(a+n,a+n*2,0); fill(b+n,b+n*2,0);
+	ntt(a,n,1); ntt(b,n,1);
+	repeat(i,0,n)c[i]=f(a[i],b[i]);
+	ntt(c,n,-1);
+}
+```
 
-- 生成函数：$A(x)=a_0+a_1x+a_2x^2+...$
-- 组合对象：x
-- 组合对象的大小：x的指数i
-- 方案数：系数
-- 有 $1+x+x^2+...=\dfrac{1}{1-x}$
+#### 快速沃尔什变换×FWT
 
-***
+- 计算 $\displaystyle c_i=\sum_{i=f(j,k)}a_jb_k$，$O(n\log n)$
 
-+ 指数生成函数：无序排列
-+ 有 $1+x+\dfrac{x^2}{2!}+\dfrac{x^3}{3!}+...=e^x$
+```c++
+void fwt(ll a[],int n,int flag,char c){
+	if(c=='|'){
+		for(int w=1;w<n;w<<=1)
+		for(int i=0;i<n;i+=w*2)
+		repeat(j,0,w)
+			ad(a[i+j+w]+=a[i+j]*flag);
+	}
+	else if(c=='&'){
+		for(int w=1;w<n;w<<=1)
+		for(int i=0;i<n;i+=w*2)
+		repeat(j,0,w)
+			ad(a[i+j]+=a[i+j+w]*flag);
+	}
+	else if(c=='^'){
+		if(flag==-1)flag=qpow(2,mod-2);
+		for(int w=1;w<n;w<<=1)
+		for(int i=0;i<n;i+=w*2)
+		repeat(j,0,w){
+			ad(a[i+j]+=a[i+j+w]);
+			ad(ad(a[i+j+w]=a[i+j]-a[i+j+w]*2));
+			(a[i+j]*=flag)%=mod;
+			(a[i+j+w]*=flag)%=mod;
+		}
+	}
+}
+void polymul_bit(ll a[],ll b[],int n,char c){ //n=2^k
+	fwt(a,n,1,c); fwt(b,n,1,c);
+	repeat(i,0,n)a[i]=(a[i]*b[i])%mod;
+	fwt(a,n,-1,c);
+}
+```
 
-***
+#### 多项式运算
 
-* 严重空缺
+- $O(n\log n)$，两倍空间
+- 多项式开方 $g[0]\not=0$ 则另需二次剩余板子（$$
+- 若 $\ln f(x)$ 存在，则 $[x^0]f(x)=1$；若 $\exp f(x)$ 存在，则 $[x^0]f(x)=0$
 
-***
+```c++
+void polyinv(ll h[],int n,ll f[]){ //n=2^k, h!=f, the answer satisfies h*f=1 (mod x^n)
+	static ll tmp[N];
+	if(n==1){f[0]=qpow(h[0],mod-2); return;}
+	polyinv(h,n/2,f);
+	fill(f+n/2,f+n,0);
+	copy(h,h+n,tmp);
+	conv(f,tmp,n*2,f,[](ll a,ll b){
+		return a*(2-a*b%mod+mod)%mod;
+	});
+}
+const int inv2=qpow(2,mod-2);
+void polysqrt(ll g[],int n,ll f[]){ //n=2^k, g!=f, the answer satisfies f*f=g (mod x^n)
+	static ll g0[N],finv[N];
+	if(n==1){f[0]=1; return;} //f[0]=sqrtmod(g[0]);
+	polysqrt(g,n/2,f);
+	polyinv(f,n,finv);
+	fill(finv+n,finv+n*2,0);
+	copy(g,g+n,g0);
+	conv(g0,finv,n*2,g0);
+	repeat(i,0,n)f[i]=inv2*(g0[i]+f[i])%mod;
+}
+void polyln(ll a[],int n,ll b[]){ //n=2^k, g!=f
+	static ll t[N];
+	polyddx(a,n,t); polyinv(a,n,b);
+	conv(t,b,2*n,t);
+	polycal(t,n,b); fill(b+n,b+n*2,0);
+}
+void polyexp(ll a[],int n,ll b[]){ //n=2^k, g!=f
+	static ll lnb[N];
+	if(n==1){b[0]=1; return;}
+	polyexp(a,n>>1,b);
+	polyln(b,n,lnb);
+	repeat(i,0,n)lnb[i]=D(a[i]-lnb[i]); lnb[0]++;
+	conv(b,lnb,n*2,b);
+}
+```
+
+#### 多项式的一些结论及生成函数
+
+- 遇到 $\displaystyle \sum_{i=0}^n[i\%m=0]f(i)$ 可以转换为 $\displaystyle \sum_{i=0}^n\dfrac 1 m\sum_{j=0}^{m-1}(\omega_k^i)^jf(i)$
+- 广义二项式定理 $\displaystyle (1+x)^{\alpha}=\sum_{i=0}^{\infty}{n\choose \alpha}x^i$
+
+##### 普通生成函数×OGF
+
+- 普通生成函数：$A(x)=a_0+a_1x+a_2x^2+...=\langle a_0,a_1,a_2...\rangle$
+- $1+x^k+x^{2k}+...=\dfrac{1}{1-x^k}$
+- 取对数后 $\displaystyle=-\ln(1-x^k)=\sum_{i=1}^{\infty}\dfrac{1}{i}x^{ki}$ 即 $\displaystyle\sum_{i=1}^{\infty}\dfrac{1}{i}x^i\otimes x^k$（polymul_special）
+- $x+\dfrac{x^2}{2}+\dfrac{x^3}{3}+...=-\ln(1-x)$
+- $1+x+x^2+...+x^{m-1}=\dfrac{1-x^m}{1-x}$
+- $1+2x+3x^2+...=\dfrac{1}{(1-x)^2}$（借用导数，$nx^{n-1}=(x^n)'$）
+- $C_m^0+C_m^1x+C_m^2x^2+...+C_m^mx^m=(1+x)^m$（二项式定理）
+- $C_m^0+C_{m+1}^1x^1+C_{m+2}^2x^2+...=\dfrac{1}{(1-x)^{m+1}}$（归纳法证明）
+- $\displaystyle\sum_{n=0}^{\infty}F_nx^n=\dfrac{(F_1-F_0)x+F_0}{1-x-x^2}$（$F$ 为斐波那契数列，列方程 $G(x)=xG(x)+x^2G(x)+(F_1-F_0)x+F_0$）
+- $\displaystyle\sum_{n=0}^{\infty} H_nx^n=\dfrac{1-\sqrt{n-4x}}{2x}$（$H$ 为卡特兰数）
+- 前缀和 $\displaystyle \sum_{n=0}^{\infty}s_nx^n=\dfrac{1}{1-x}f(x)$
+- 五边形数定理：$\displaystyle \prod_{i=1}^{\infty}(1-x^i)=\sum_{k=0}^{\infty}(-1)^kx^{\frac 1 2k(3k\pm 1)}$
+
+##### 指数生成函数×EGF
+
+- 指数生成函数：$A(x)=a_0+a_1x+a_2\dfrac{x^2}{2!}+a_3\dfrac{x^3}{3!}+...=\langle a_0,a_1,a_2,a_3,...\rangle$
+- 普通生成函数转换为指数生成函数：系数乘以 $n!$
+- $1+x+\dfrac{x^2}{2!}+\dfrac{x^3}{3!}+...=\exp x$
+- 长度为 $n$ 的循环置换数为 $P(x)=-\ln(1-x)$，长度为 $n$ 的置换数为 $\exp P(x)=\dfrac{1}{1-x}$（注意是**指数**生成函数）
+- 推广：
+	- $n$ 个点的生成树个数是 $\displaystyle P(x)=\sum_{n=1}^{\infty}n^{n-2}\dfrac{x^n}{n!}$，$n$ 个点的生成森林个数是 $\exp P(x)$
+	- $n$ 个点的无向连通图个数是 $P(x)$，$n$ 个点的无向图个数是 $\displaystyle\exp P(x)=\sum_{n=0}^{\infty}2^{\frac 1 2 n(n-1)}\dfrac{x^n}{n!}$
+	- 长度为 $n(n\ge 2)$ 的循环置换数是 $P(x)=-\ln(1-x)-x$，长度为 $n$ 的错排数是 $\exp P(x)$
 
 ### 矩阵
 
 #### 矩阵乘法 矩阵快速幂
 
-矩乘 $O(n^3)$，矩快 $O(n^3\log b)$
+- 已并行优化，矩乘 $O(n^3)$，矩快 $O(n^3\log b)$
 
 ```c++
 struct mat{
@@ -6885,20 +7764,20 @@ struct mat{
 		repeat(j,0,n)
 			a[i][j]=e*(i==j);
 	}
-	mat operator*(const mat &b)const{ //矩阵乘法
+	mat operator*(const mat &b)const{
 		mat ans(0);
 		repeat(i,0,n)
-		repeat(j,0,n){
-			ll &t=ans.a[i][j];
-			repeat(k,0,n)
-				t=(t+a[i][k]*b.a[k][j])%mod;
+		repeat(k,0,n){
+			ll t=a[i][k];
+			repeat(j,0,n)
+				(ans.a[i][j]+=t*b.a[k][j])%=mod;
 		}
 		return ans;
 	}
 	ll *operator[](int x){return a[x];}
 	const ll *operator[](int x)const{return a[x];}
 };
-mat qpow(mat a,ll b){ //矩阵快速幂
+mat qpow(mat a,ll b){
 	mat ans(1); //mat ans; repeat(i,0,n)ans[i][i]=1;
 	while(b){
 		if(b&1)ans=ans*a;
@@ -7213,7 +8092,41 @@ void init(){v=0;}
 ***
 
 - 线性递推转矩快
-- $f_{n+3}=af_{n+2}+bf_{n+1}+cf_{n}\\\Leftrightarrow\left[\begin{array}{c}a&b&c\\1&0&0\\0&1&0\end{array}\right]^n \left[\begin{array}{c}f_2\\f_1\\f_0\end{array}\right]=\left[\begin{array}{c}f_{n+2}\\f_{n+1}\\f_{n}\end{array}\right]$
+
+$$
+f_{n+3}=af_{n+2}+bf_{n+1}+cf_{n}
+$$
+
+$$
+\Leftrightarrow\left[\begin{array}{c}a&b&c\\1&0&0\\0&1&0\end{array}\right]^n \left[\begin{array}{c}f_2\\f_1\\f_0\end{array}\right]=\left[\begin{array}{c}f_{n+2}\\f_{n+1}\\f_{n}\end{array}\right]
+$$
+
+***
+
+- 追赶法解周期性方程（未测）
+- $\left[\begin{array}{ccccc}a_0 & b_0 & c_0 \\ & a_1 & b_1 & c_1 \\ & & ... & ... & ... \\ c_{n-2} & & & a_{n-2}& b_{n-2} \\ b_{n-1} & c_{n-1}\end{array}\right]X=\left[\begin{array}{c}x_0\\x_1\\x_2\\...\\x_{n-1}\end{array}\right]$
+
+```c++
+lf a[N],b[N],c[N],x[N]; //结果存x
+void run(){
+	c[0]/=b[0]; a[0]/=b[0]; x[0]/=b[0];
+	for(int i=1;i<N-1;i++){
+		lf temp=b[i]-a[i]*c[i-1];
+		c[i]/=temp;
+		x[i]=(x[i]-a[i]*x[i-1])/temp;
+		a[i]=-a[i]*a[i-1]/temp;
+	}
+	a[N-2]=-a[N-2]-c[N-2];
+	for(int i=N-3;i>=0;i--){
+		a[i]=-a[i]-c[i]*a[i+1];
+		x[i]-=c[i]*x[i+1];
+	}
+	x[N-1]-=(c[N-1]*x[0]+a[N-1]*x[N-2]);
+	x[N-1]/=(c[N-1]*a[0]+a[N-1]*a[N-2]+b[N-1]);
+	for(int i=N-2;i>=0;i--)
+		x[i]+=a[i]*x[N-1];
+}
+```
 
 ***
 
@@ -7300,7 +8213,7 @@ struct mint{
 ### struct of 高精度
 
 - 加、减、乘、单精度取模、小于号和等于号（其他不等号用rel_ops命名空间）
-- 如果涉及除法，~~那就完蛋~~，用java吧；如果不想打这么多行也用java吧（~~一定要让队友会写java~~）
+- 如果涉及除法，~~那就完蛋~~，用java吧；如果不想打这么多行也用java吧
 
 ```c++
 struct big{
@@ -7647,6 +8560,10 @@ public static BigInteger isqrtNewton(BigInteger n){
 
 ***
 
+- 雅可比四平方和定理：设 $a^2+b^2+c^2+d^2=n$ 的整数解个数为 $S(n)$，有 $S(2^k m)=\begin{cases}8d(m) & if\ k=0\\24d(m) & if\ k>0\end{cases}(m\ is\ odd)$，$d(n)$ 为 n 的约数和
+
+***
+
 - 基姆拉尔森公式
 - 已知年月日，返回星期几
 
@@ -7659,6 +8576,32 @@ int week(int y,int m,int d){
 
 ***
 
+标准阳历与儒略日转换
+
+```c++
+int DateToInt(int y, int m, int d){
+	return
+	1461 * (y + 4800 + (m - 14) / 12) / 4 +
+	367 * (m - 2 - (m - 14) / 12 * 12) / 12 -
+	3 * ((y + 4900 + (m - 14) / 12) / 100) / 4 +
+	d - 32075;
+}
+void IntToDate(int jd, int &y, int &m, int &d){
+	int x, n, i, j;
+	x = jd + 68569;
+	n = 4 * x / 146097;
+	x -= (146097 * n + 3) / 4;
+	i = (4000 * (x + 1)) / 1461001;
+	x -= 1461 * i / 4 - 31;
+	j = 80 * x / 2447;
+	d = x - 2447 * j / 80;
+	x = j / 11;
+	m = j + 2 - 12 * x;
+	y = 100 * (n - 49) + i + x;
+}
+```
+***
+
 求 sum(n/i)
 
 ```c++
@@ -7669,3 +8612,9 @@ int f(int n){
 	return ans*2-t*t;
 }
 ```
+
+***
+
+n 维超立方体有 $2^{n-i}×C(n, i)$ 个 i 维元素
+
+***
