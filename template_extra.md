@@ -1,4 +1,7 @@
-- [Notice](#notice)
+- [unclassified](#unclassified)
+	- [Notice](#notice)
+	- [线段树分治](#线段树分治)
+	- [反悔贪心](#反悔贪心)
 - [计算几何](#计算几何)
 	- [曼哈顿最小生成树](#曼哈顿最小生成树)
 	- [struct of 整点直线](#struct-of-整点直线)
@@ -9,13 +12,14 @@
 	- [可删堆](#可删堆)
 	- [主席树](#主席树)
 	- [struct of 二维数组](#struct-of-二维数组)
+	- [析合树](#析合树)
 - [数学](#数学)
 	- [超级卡特兰数](#超级卡特兰数)
 	- [分治FFT](#分治fft)
 	- [第二类斯特林数·行](#第二类斯特林数行)
 	- [分数类](#分数类)
 	- [线性基求交](#线性基求交)
-	- [Miller-Rabin 和 Pollard_rho 更新](#miller-rabin-和-pollard_rho-更新)
+	- [Miller-Rabin and Pollard_rho 更新](#miller-rabin-and-pollard_rho-更新)
 - [图论](#图论)
 	- [Kruskal重构树](#kruskal重构树)
 	- [树哈希 补充](#树哈希-补充)
@@ -36,11 +40,13 @@
 		- [推导 g](#推导-g)
 		- [推导 h](#推导-h)
 - [排列组合 from OIwiki](#排列组合-from-oiwiki)
-	- [组合数性质 | 二项式推论](#组合数性质--二项式推论)
+	- [组合数性质](#组合数性质)
 
-## Notice
+## unclassified
 
-- NTT中，$\omega_n=$ `qpow(3,(mod-1)/n))`
+### Notice
+
+- NTT中，$\omega_n=$ `qpow(G,(mod-1)/n))`
 - 原根
 
 ```c++
@@ -56,6 +62,36 @@ if (m == 998244353) return 3;
 
 ```c++
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4.1,sse4.2,avx,avx2,popcnt,tune=native")
+```
+
+### 线段树分治
+
+- 支持添删边的离线操作
+- 对时间建立线段树，每个结点开一个vector。对一条边，添加到删除的时间区间，插入到线段树中。最后对线段树dfs一遍统计答案，向下走即添边，向上走即撤销，用可撤销数据结构维护
+- 复杂度为 $O(n\log n)$ 乘以可撤销数据结构复杂度
+
+### 反悔贪心
+
+- 例：第 $i$ 天要么获得 $A_i$ 元要么获得 $B_i$ 元和 $1$ 积分，$A_i\ge 0$，$B_i$ 可能 $<0$，问获得积分最大值
+- 能拿 $B$ 就拿 $B$，不然就把之前某个 $B$ 换成 $A$ 然后拿这次的 $B$（如果更优的话）
+
+```c++
+priority_queue<int> q;
+int n=read(),now=0,ans=0;
+repeat(i,0,n){
+	int A=read(),B=read();
+	if(now+B>=0){
+		q.push(A-B);
+		ans++;
+		now+=B;
+	}
+	else if(!q.empty() && now+q.top()+B>=0 && q.top()>A-B){
+		now+=q.top()+B;
+		q.pop();
+		q.push(A-B);
+	}
+	else now+=A;
+}
 ```
 
 ## 计算几何
@@ -588,6 +624,148 @@ struct mat{
 }a;
 ```
 
+### 析合树
+
+- 定义连续段为一个区间，区间内所有数排序后为连续正整数
+- 析合树：每个节点对应一个连续段，合点由儿子顺序或倒序组成，析点为乱序
+- 给定一个排列，询问包含给定区间的最短连续段
+- 注意代码里N已经是两倍大小了，编号从 $1$ 开始，$O(n\log n)$
+
+```c++
+int n, m, a[N], st1[N], st2[N], tp1, tp2, rt;
+int L[N], R[N], M[N], id[N], cnt, typ[N], st[N], tp;
+#define log(x) (31 - __builtin_clz(x))
+struct RMQ {
+    int mn[N][17], mx[N][17];
+    void build() {
+        repeat(i, 1, n + 1) mn[i][0] = mx[i][0] = a[i];
+        repeat(i, 1, 17) repeat(j, 1, n - (1 << i) + 2) {
+            mn[j][i] = min(mn[j][i - 1], mn[j + (1 << (i - 1))][i - 1]);
+            mx[j][i] = max(mx[j][i - 1], mx[j + (1 << (i - 1))][i - 1]);
+        }
+    }
+    int qmin(int l, int r) {
+        int t = log(r - l + 1);
+        return min(mn[l][t], mn[r - (1 << t) + 1][t]);
+    }
+    int qmax(int l, int r) {
+        int t = log(r - l + 1);
+        return max(mx[l][t], mx[r - (1 << t) + 1][t]);
+    }
+} D;
+#define ls (k << 1)
+#define rs (k << 1 | 1)
+struct SEG {
+    int a[N << 1], z[N << 1];
+    void up(int k) { a[k] = min(a[ls], a[rs]); }
+    void mfy(int k, int v) { a[k] += v, z[k] += v; }
+    void down(int k) {
+        if (z[k]) mfy(ls, z[k]), mfy(rs, z[k]), z[k] = 0;
+    }
+    void update(int k, int l, int r, int x, int y, int v) {
+        if (x > r || y < l) return;
+        if (x<=l && r<=y) {
+            mfy(k, v);
+            return;
+        }
+        down(k);
+        int mid = (l + r) >> 1;
+        update(ls, l, mid, x, y, v);
+        update(rs, mid + 1, r, x, y, v);
+        up(k);
+    }
+    int query(int k, int l, int r) {
+        if (l == r) return l;
+        down(k);
+        int mid = (l + r) >> 1;
+        return a[ls] == 0 ? query(ls, l, mid) : query(rs, mid + 1, r);
+    }
+} T;
+int dep[N], fa[N][18];
+vector<int> e[N];
+void add(int u, int v) { e[u].push_back(v); }
+void dfs(int u) {
+    repeat(i, 1, log(dep[u]) + 1) fa[u][i] = fa[fa[u][i - 1]][i - 1];
+    for (auto v : e[u]) {
+        dep[v] = dep[u] + 1;
+        fa[v][0] = u;
+        dfs(v);
+    }
+}
+int go(int u, int d) {
+    for (int i = 0; i < 18 && d; ++i)
+        if (d & (1 << i)) d ^= 1 << i, u = fa[u][i];
+    return u;
+}
+int lca(int u, int v) {
+    if (dep[u] < dep[v]) swap(u, v);
+    u = go(u, dep[u] - dep[v]);
+    if (u == v) return u;
+    for (int i = 17; ~i; --i)
+        if (fa[u][i] != fa[v][i]) u = fa[u][i], v = fa[v][i];
+    return fa[u][0];
+}
+bool judge(int l, int r) { return D.qmax(l, r) - D.qmin(l, r) == r - l; }
+void build() {
+    repeat(i, 1, n + 1) {
+        while (tp1 && a[i] <= a[st1[tp1]])
+            T.update(1, 1, n, st1[tp1 - 1] + 1, st1[tp1], a[st1[tp1]]), tp1--;
+        while (tp2 && a[i] >= a[st2[tp2]])
+            T.update(1, 1, n, st2[tp2 - 1] + 1, st2[tp2], -a[st2[tp2]]), tp2--;
+        T.update(1, 1, n, st1[tp1] + 1, i, -a[i]);
+        st1[++tp1] = i;
+        T.update(1, 1, n, st2[tp2] + 1, i, a[i]);
+        st2[++tp2] = i;
+        id[i] = ++cnt;
+        L[cnt] = R[cnt] = i;
+        int le = T.query(1, 1, n), now = cnt;
+        while (tp && L[st[tp]] >= le) {
+            if (typ[st[tp]] && judge(M[st[tp]], i)) {
+                R[st[tp]] = i, add(st[tp], now), now = st[tp--];
+            } else if (judge(L[st[tp]], i)) {
+                typ[++cnt] = 1;
+                L[cnt] = L[st[tp]], R[cnt] = i, M[cnt] = L[now];
+                add(cnt, st[tp--]), add(cnt, now);
+                now = cnt;
+            } else {
+                add(++cnt, now);
+                do {
+                    add(cnt, st[tp--]);
+                } while (tp && !judge(L[st[tp]], i));
+                L[cnt] = L[st[tp]], R[cnt] = i, add(cnt, st[tp--]);
+                now = cnt;
+            }
+        }
+        st[++tp] = now;
+        T.update(1, 1, n, 1, i, -1);
+    }
+    rt = st[1];
+}
+void query(int &l, int &r) {
+    int x = id[l], y = id[r];
+    int z = lca(x, y);
+    if (typ[z] & 1)
+        l = L[go(x, dep[x] - dep[z] - 1)], r = R[go(y, dep[y] - dep[z] - 1)];
+    else
+        l = L[z], r = R[z];
+}
+int main() {
+    scanf("%d", &n);
+    repeat(i, 1, n + 1) scanf("%d", &a[i]);
+    D.build();
+    build();
+    dfs(rt);
+    scanf("%d", &m);
+    while (m--) {
+        int x, y;
+        scanf("%d%d", &x, &y);
+        query(x, y);
+        printf("%d %d\n", x, y);
+    }
+    return 0;
+}
+```
+
 ## 数学
 
 ### 超级卡特兰数
@@ -736,7 +914,7 @@ Base merge(Base a,Base b){
 }
 ```
 
-### Miller-Rabin 和 Pollard_rho 更新
+### Miller-Rabin and Pollard_rho 更新
 
 ```c++
 bool mr(ll x,ll b){ //private
@@ -1242,6 +1420,12 @@ def Solve():
 T=int(input())
 for ca in range(1,T+1):
     Solve()
+```
+
+输出（不回车）
+
+```python
+print(x,end="")
 ```
 
 常量
@@ -1962,7 +2146,7 @@ signed main() {
 
 ## 排列组合 from OIwiki
 
-### 组合数性质 | 二项式推论
+### 组合数性质
 
 由于组合数在 OI 中十分重要，因此在此介绍一些组合数的性质。
 
