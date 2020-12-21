@@ -20,6 +20,7 @@
 	- [分数类](#分数类)
 	- [线性基求交](#线性基求交)
 	- [Miller-Rabin and Pollard_rho 更新](#miller-rabin-and-pollard_rho-更新)
+	- [组合数前缀和 多组询问](#组合数前缀和-多组询问)
 - [图论](#图论)
 	- [Kruskal重构树](#kruskal重构树)
 	- [树哈希 补充](#树哈希-补充)
@@ -636,133 +637,133 @@ int n, m, a[N], st1[N], st2[N], tp1, tp2, rt;
 int L[N], R[N], M[N], id[N], cnt, typ[N], st[N], tp;
 #define log(x) (31 - __builtin_clz(x))
 struct RMQ {
-    int mn[N][17], mx[N][17];
-    void build() {
-        repeat(i, 1, n + 1) mn[i][0] = mx[i][0] = a[i];
-        repeat(i, 1, 17) repeat(j, 1, n - (1 << i) + 2) {
-            mn[j][i] = min(mn[j][i - 1], mn[j + (1 << (i - 1))][i - 1]);
-            mx[j][i] = max(mx[j][i - 1], mx[j + (1 << (i - 1))][i - 1]);
-        }
-    }
-    int qmin(int l, int r) {
-        int t = log(r - l + 1);
-        return min(mn[l][t], mn[r - (1 << t) + 1][t]);
-    }
-    int qmax(int l, int r) {
-        int t = log(r - l + 1);
-        return max(mx[l][t], mx[r - (1 << t) + 1][t]);
-    }
+	int mn[N][17], mx[N][17];
+	void build() {
+		repeat(i, 1, n + 1) mn[i][0] = mx[i][0] = a[i];
+		repeat(i, 1, 17) repeat(j, 1, n - (1 << i) + 2) {
+			mn[j][i] = min(mn[j][i - 1], mn[j + (1 << (i - 1))][i - 1]);
+			mx[j][i] = max(mx[j][i - 1], mx[j + (1 << (i - 1))][i - 1]);
+		}
+	}
+	int qmin(int l, int r) {
+		int t = log(r - l + 1);
+		return min(mn[l][t], mn[r - (1 << t) + 1][t]);
+	}
+	int qmax(int l, int r) {
+		int t = log(r - l + 1);
+		return max(mx[l][t], mx[r - (1 << t) + 1][t]);
+	}
 } D;
 #define ls (k << 1)
 #define rs (k << 1 | 1)
 struct SEG {
-    int a[N << 1], z[N << 1];
-    void up(int k) { a[k] = min(a[ls], a[rs]); }
-    void mfy(int k, int v) { a[k] += v, z[k] += v; }
-    void down(int k) {
-        if (z[k]) mfy(ls, z[k]), mfy(rs, z[k]), z[k] = 0;
-    }
-    void update(int k, int l, int r, int x, int y, int v) {
-        if (x > r || y < l) return;
-        if (x<=l && r<=y) {
-            mfy(k, v);
-            return;
-        }
-        down(k);
-        int mid = (l + r) >> 1;
-        update(ls, l, mid, x, y, v);
-        update(rs, mid + 1, r, x, y, v);
-        up(k);
-    }
-    int query(int k, int l, int r) {
-        if (l == r) return l;
-        down(k);
-        int mid = (l + r) >> 1;
-        return a[ls] == 0 ? query(ls, l, mid) : query(rs, mid + 1, r);
-    }
+	int a[N << 1], z[N << 1];
+	void up(int k) { a[k] = min(a[ls], a[rs]); }
+	void mfy(int k, int v) { a[k] += v, z[k] += v; }
+	void down(int k) {
+		if (z[k]) mfy(ls, z[k]), mfy(rs, z[k]), z[k] = 0;
+	}
+	void update(int k, int l, int r, int x, int y, int v) {
+		if (x > r || y < l) return;
+		if (x<=l && r<=y) {
+			mfy(k, v);
+			return;
+		}
+		down(k);
+		int mid = (l + r) >> 1;
+		update(ls, l, mid, x, y, v);
+		update(rs, mid + 1, r, x, y, v);
+		up(k);
+	}
+	int query(int k, int l, int r) {
+		if (l == r) return l;
+		down(k);
+		int mid = (l + r) >> 1;
+		return a[ls] == 0 ? query(ls, l, mid) : query(rs, mid + 1, r);
+	}
 } T;
 int dep[N], fa[N][18];
 vector<int> e[N];
 void add(int u, int v) { e[u].push_back(v); }
 void dfs(int u) {
-    repeat(i, 1, log(dep[u]) + 1) fa[u][i] = fa[fa[u][i - 1]][i - 1];
-    for (auto v : e[u]) {
-        dep[v] = dep[u] + 1;
-        fa[v][0] = u;
-        dfs(v);
-    }
+	repeat(i, 1, log(dep[u]) + 1) fa[u][i] = fa[fa[u][i - 1]][i - 1];
+	for (auto v : e[u]) {
+		dep[v] = dep[u] + 1;
+		fa[v][0] = u;
+		dfs(v);
+	}
 }
 int go(int u, int d) {
-    for (int i = 0; i < 18 && d; ++i)
-        if (d & (1 << i)) d ^= 1 << i, u = fa[u][i];
-    return u;
+	for (int i = 0; i < 18 && d; ++i)
+		if (d & (1 << i)) d ^= 1 << i, u = fa[u][i];
+	return u;
 }
 int lca(int u, int v) {
-    if (dep[u] < dep[v]) swap(u, v);
-    u = go(u, dep[u] - dep[v]);
-    if (u == v) return u;
-    for (int i = 17; ~i; --i)
-        if (fa[u][i] != fa[v][i]) u = fa[u][i], v = fa[v][i];
-    return fa[u][0];
+	if (dep[u] < dep[v]) swap(u, v);
+	u = go(u, dep[u] - dep[v]);
+	if (u == v) return u;
+	for (int i = 17; ~i; --i)
+		if (fa[u][i] != fa[v][i]) u = fa[u][i], v = fa[v][i];
+	return fa[u][0];
 }
 bool judge(int l, int r) { return D.qmax(l, r) - D.qmin(l, r) == r - l; }
 void build() {
-    repeat(i, 1, n + 1) {
-        while (tp1 && a[i] <= a[st1[tp1]])
-            T.update(1, 1, n, st1[tp1 - 1] + 1, st1[tp1], a[st1[tp1]]), tp1--;
-        while (tp2 && a[i] >= a[st2[tp2]])
-            T.update(1, 1, n, st2[tp2 - 1] + 1, st2[tp2], -a[st2[tp2]]), tp2--;
-        T.update(1, 1, n, st1[tp1] + 1, i, -a[i]);
-        st1[++tp1] = i;
-        T.update(1, 1, n, st2[tp2] + 1, i, a[i]);
-        st2[++tp2] = i;
-        id[i] = ++cnt;
-        L[cnt] = R[cnt] = i;
-        int le = T.query(1, 1, n), now = cnt;
-        while (tp && L[st[tp]] >= le) {
-            if (typ[st[tp]] && judge(M[st[tp]], i)) {
-                R[st[tp]] = i, add(st[tp], now), now = st[tp--];
-            } else if (judge(L[st[tp]], i)) {
-                typ[++cnt] = 1;
-                L[cnt] = L[st[tp]], R[cnt] = i, M[cnt] = L[now];
-                add(cnt, st[tp--]), add(cnt, now);
-                now = cnt;
-            } else {
-                add(++cnt, now);
-                do {
-                    add(cnt, st[tp--]);
-                } while (tp && !judge(L[st[tp]], i));
-                L[cnt] = L[st[tp]], R[cnt] = i, add(cnt, st[tp--]);
-                now = cnt;
-            }
-        }
-        st[++tp] = now;
-        T.update(1, 1, n, 1, i, -1);
-    }
-    rt = st[1];
+	repeat(i, 1, n + 1) {
+		while (tp1 && a[i] <= a[st1[tp1]])
+			T.update(1, 1, n, st1[tp1 - 1] + 1, st1[tp1], a[st1[tp1]]), tp1--;
+		while (tp2 && a[i] >= a[st2[tp2]])
+			T.update(1, 1, n, st2[tp2 - 1] + 1, st2[tp2], -a[st2[tp2]]), tp2--;
+		T.update(1, 1, n, st1[tp1] + 1, i, -a[i]);
+		st1[++tp1] = i;
+		T.update(1, 1, n, st2[tp2] + 1, i, a[i]);
+		st2[++tp2] = i;
+		id[i] = ++cnt;
+		L[cnt] = R[cnt] = i;
+		int le = T.query(1, 1, n), now = cnt;
+		while (tp && L[st[tp]] >= le) {
+			if (typ[st[tp]] && judge(M[st[tp]], i)) {
+				R[st[tp]] = i, add(st[tp], now), now = st[tp--];
+			} else if (judge(L[st[tp]], i)) {
+				typ[++cnt] = 1;
+				L[cnt] = L[st[tp]], R[cnt] = i, M[cnt] = L[now];
+				add(cnt, st[tp--]), add(cnt, now);
+				now = cnt;
+			} else {
+				add(++cnt, now);
+				do {
+					add(cnt, st[tp--]);
+				} while (tp && !judge(L[st[tp]], i));
+				L[cnt] = L[st[tp]], R[cnt] = i, add(cnt, st[tp--]);
+				now = cnt;
+			}
+		}
+		st[++tp] = now;
+		T.update(1, 1, n, 1, i, -1);
+	}
+	rt = st[1];
 }
 void query(int &l, int &r) {
-    int x = id[l], y = id[r];
-    int z = lca(x, y);
-    if (typ[z] & 1)
-        l = L[go(x, dep[x] - dep[z] - 1)], r = R[go(y, dep[y] - dep[z] - 1)];
-    else
-        l = L[z], r = R[z];
+	int x = id[l], y = id[r];
+	int z = lca(x, y);
+	if (typ[z] & 1)
+		l = L[go(x, dep[x] - dep[z] - 1)], r = R[go(y, dep[y] - dep[z] - 1)];
+	else
+		l = L[z], r = R[z];
 }
 int main() {
-    scanf("%d", &n);
-    repeat(i, 1, n + 1) scanf("%d", &a[i]);
-    D.build();
-    build();
-    dfs(rt);
-    scanf("%d", &m);
-    while (m--) {
-        int x, y;
-        scanf("%d%d", &x, &y);
-        query(x, y);
-        printf("%d %d\n", x, y);
-    }
-    return 0;
+	scanf("%d", &n);
+	repeat(i, 1, n + 1) scanf("%d", &a[i]);
+	D.build();
+	build();
+	dfs(rt);
+	scanf("%d", &m);
+	while (m--) {
+		int x, y;
+		scanf("%d%d", &x, &y);
+		query(x, y);
+		printf("%d %d\n", x, y);
+	}
+	return 0;
 }
 ```
 
@@ -918,37 +919,37 @@ Base merge(Base a,Base b){
 
 ```c++
 bool mr(ll x,ll b){ //private
-    ll k=x-1;
-    while(k){
-        ll cur=qpow(b,k,x);
-        if(cur!=1 && cur!=x-1)return 0;
-        if(k%2==1 || cur==x-1)return 1;
-        k>>=1;
-    }
-    return 1;
+	ll k=x-1;
+	while(k){
+		ll cur=qpow(b,k,x);
+		if(cur!=1 && cur!=x-1)return 0;
+		if(k%2==1 || cur==x-1)return 1;
+		k>>=1;
+	}
+	return 1;
 }
 bool isprime(ll x){
-    if(x<2 || x==46856248255981ll)
-	    return 0;
-    if(x<4 || x==61) // raw: if(x==2 || x==3 || x==7 || x==61 || x==24251)
-        return 1;
-    return mr(x,2) && mr(x,61);
+	if(x<2 || x==46856248255981ll)
+		return 0;
+	if(x<4 || x==61) // raw: if(x==2 || x==3 || x==7 || x==61 || x==24251)
+		return 1;
+	return mr(x,2) && mr(x,61);
 }
 ll pollard_rho(ll x){ //private
-    ll s=0,t=0,c=rnd()%(x-1)+1;
-    int stp=0,goal=1; ll val=1;
-    for(goal=1;;goal<<=1,s=t,val=1){
-        for(stp=1;stp<=goal;++stp){
-            t=((__int128)t*t+c)%x;
-            val=(__int128)val*abs(t-s)%x;
-            if(stp%127==0){
-                ll d=__gcd(val,x);
-                if(d>1)return d;
-            }
-        }
-        ll d=__gcd(val,x);
-        if(d>1)return d;
-    }
+	ll s=0,t=0,c=rnd()%(x-1)+1;
+	int stp=0,goal=1; ll val=1;
+	for(goal=1;;goal<<=1,s=t,val=1){
+		for(stp=1;stp<=goal;++stp){
+			t=((__int128)t*t+c)%x;
+			val=(__int128)val*abs(t-s)%x;
+			if(stp%127==0){
+				ll d=__gcd(val,x);
+				if(d>1)return d;
+			}
+		}
+		ll d=__gcd(val,x);
+		if(d>1)return d;
+	}
 }
 vector<ll> ans; //result
 void rho(ll n){
@@ -961,6 +962,39 @@ void rho(ll n){
 	rho(t);
 	rho(n/t);
 }
+```
+
+### 组合数前缀和 多组询问
+
+- 令 $\displaystyle S(n,m)=\sum_{i=0}^{m}C(n,i)$
+- 则 $S(n,m+1)=S(n,m)+C(n,m+1),S(n+1,m)=2S(n,m)-C(n,m)$
+- 可以莫队
+
+```c++
+struct MO{
+	int n,m,ans;
+	MO(){n=m=0; ans=1;}
+	int query(int n1,int m1){
+		while(m<m1){
+			(ans+=C(n,m+1))%=mod;
+			m++;
+		}
+		while(m>m1){
+			m--;
+			(ans-=C(n,m+1))%=mod;
+		}
+		while(n<n1){
+			(ans=ans*2-C(n,m))%=mod;
+			n++;
+		}
+		while(n>n1){
+			n--;
+			static const int inv2=qpow(2,mod-2);
+			(ans=(ans+C(n,m))*inv2)%=mod;
+		}
+		return ans;
+	}
+};
 ```
 
 ## 图论
@@ -1419,7 +1453,7 @@ def Solve():
 	print(a+b)
 T=int(input())
 for ca in range(1,T+1):
-    Solve()
+	Solve()
 ```
 
 输出（不回车）

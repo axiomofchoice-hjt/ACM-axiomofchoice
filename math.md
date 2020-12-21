@@ -1,15 +1,13 @@
-<!-- TOC -->
-
 - [数学](#数学)
 	- [数论](#数论)
 		- [基本操作](#基本操作)
-			- [模乘 模幂 模逆 扩欧](#模乘-模幂-模逆-扩欧)
-			- [阶乘 组合数](#阶乘-组合数)
+			- [整数环相关 and 扩展欧几里得](#整数环相关-and-扩展欧几里得)
+			- [阶乘 and 组合数](#阶乘-and-组合数)
 			- [防爆模乘](#防爆模乘)
 			- [最大公约数](#最大公约数)
 		- [高级模操作](#高级模操作)
-			- [同余方程组 | CRT+extra](#同余方程组--crtextra)
-			- [离散对数 | BSGS+extra](#离散对数--bsgsextra)
+			- [CRT+extra](#crtextra)
+			- [离散对数 using BSGS+extra](#离散对数-using-bsgsextra)
 			- [阶与原根](#阶与原根)
 			- [N次剩余](#n次剩余)
 		- [数论函数的生成](#数论函数的生成)
@@ -22,9 +20,9 @@
 				- [筛其他函数](#筛其他函数)
 			- [min_25筛](#min_25筛)
 		- [素数约数相关](#素数约数相关)
-			- [唯一分解 质因数分解](#唯一分解-质因数分解)
-			- [素数判定 | 朴素 or Miller-Rabin](#素数判定--朴素-or-miller-rabin)
-			- [大数分解 | Pollard-rho](#大数分解--pollard-rho)
+			- [唯一分解 / 质因数分解](#唯一分解--质因数分解)
+			- [素数判定 using Miller-Rabin](#素数判定-using-miller-rabin)
+			- [大数分解 using Pollard-rho](#大数分解-using-pollard-rho)
 			- [求约数](#求约数)
 			- [反素数生成](#反素数生成)
 		- [数论杂项](#数论杂项)
@@ -34,38 +32,38 @@
 			- [莫比乌斯反演](#莫比乌斯反演)
 			- [杜教筛](#杜教筛)
 			- [斐波那契数列](#斐波那契数列)
-			- [佩尔方程×Pell](#佩尔方程pell)
+			- [佩尔方程 / Pell](#佩尔方程--pell)
 	- [组合数学](#组合数学)
-		- [组合数取模 | Lucas+extra](#组合数取模--lucasextra)
-		- [康托展开+逆 编码与解码](#康托展开逆-编码与解码)
+		- [组合数取模 using Lucas+extra](#组合数取模-using-lucasextra)
+		- [康托展开+anti and 编码与解码](#康托展开anti-and-编码与解码)
 		- [置换群计数](#置换群计数)
 		- [组合数学的一些结论](#组合数学的一些结论)
 	- [博弈论](#博弈论)
-		- [SG函数 SG定理](#sg函数-sg定理)
+		- [SG定理](#sg定理)
 		- [Nim游戏](#nim游戏)
-		- [删边游戏×Green Hachenbush](#删边游戏green-hachenbush)
+		- [删边游戏 / Green Hachenbush](#删边游戏--green-hachenbush)
 		- [翻硬币游戏](#翻硬币游戏)
-		- [高维组合游戏 | Nim积](#高维组合游戏--nim积)
-		- [不平等博弈 | 超现实数](#不平等博弈--超现实数)
+		- [高维组合游戏 using Nim积](#高维组合游戏-using-nim积)
+		- [不平等博弈 using 超现实数](#不平等博弈-using-超现实数)
 		- [其他博弈结论](#其他博弈结论)
 	- [代数结构](#代数结构)
 		- [置换群](#置换群)
 		- [多项式](#多项式)
 			- [拉格朗日插值](#拉格朗日插值)
 			- [多项式基本操作](#多项式基本操作)
-			- [快速傅里叶变换×FTT+任意模数](#快速傅里叶变换ftt任意模数)
-			- [快速数论变换×NTT](#快速数论变换ntt)
-			- [快速沃尔什变换×FWT](#快速沃尔什变换fwt)
+			- [快速傅里叶变换 / FTT+任意模数](#快速傅里叶变换--ftt任意模数)
+			- [快速数论变换 / NTT](#快速数论变换--ntt)
+			- [快速沃尔什变换 / FWT](#快速沃尔什变换--fwt)
 			- [多项式运算](#多项式运算)
 			- [多项式的一些结论及生成函数](#多项式的一些结论及生成函数)
-				- [普通生成函数×OGF](#普通生成函数ogf)
-				- [指数生成函数×EGF](#指数生成函数egf)
+				- [普通生成函数 / OGF](#普通生成函数--ogf)
+				- [指数生成函数 / EGF](#指数生成函数--egf)
 		- [矩阵](#矩阵)
-			- [矩阵乘法 矩阵快速幂](#矩阵乘法-矩阵快速幂)
-			- [矩阵高级操作](#矩阵高级操作)
+			- [矩阵乘法 and 矩阵快速幂](#矩阵乘法-and-矩阵快速幂)
+			- [高斯消元](#高斯消元)
 			- [异或方程组](#异或方程组)
 			- [线性基](#线性基)
-			- [线性规划 | 单纯形法](#线性规划--单纯形法)
+			- [线性规划 using 单纯形法](#线性规划-using-单纯形法)
 			- [矩阵的一些结论](#矩阵的一些结论)
 	- [数学杂项](#数学杂项)
 		- [主定理](#主定理)
@@ -73,14 +71,13 @@
 		- [struct of 自动取模](#struct-of-自动取模)
 		- [struct of 高精度](#struct-of-高精度)
 		- [表达式求值](#表达式求值)
-		- [一些数学结论](#一些数学结论)
-			- [约瑟夫问题](#约瑟夫问题)
-			- [格雷码×gray 汉诺塔](#格雷码gray-汉诺塔)
-			- [Stern-Brocot树 Farey序列](#stern-brocot树-farey序列)
-			- [浮点与近似计算](#浮点与近似计算)
-			- [others of 数学杂项](#others-of-数学杂项)
-
-<!-- /TOC -->
+		- [约瑟夫问题](#约瑟夫问题)
+		- [格雷码](#格雷码)
+		- [汉诺塔](#汉诺塔)
+		- [Stern-Brocot树 and Farey序列](#stern-brocot树-and-farey序列)
+		- [浮点与近似计算](#浮点与近似计算)
+		- [日期换算](#日期换算)
+		- [others of 数学杂项](#others-of-数学杂项)
 
 # 数学
 
@@ -88,7 +85,7 @@
 
 ### 基本操作
 
-#### 模乘 模幂 模逆 扩欧
+#### 整数环相关 and 扩展欧几里得
 
 ```c++
 ll mul(ll a,ll b,ll m=mod){return a*b%m;} //模乘
@@ -116,7 +113,7 @@ ll qpows(ll a,ll b,ll m=mod){
 }
 ```
 
-#### 阶乘 组合数
+#### 阶乘 and 组合数
 
 - $O(n)$ 初始化，$O(1)$ 查询
 
@@ -198,7 +195,7 @@ lf fgcd(lf a,lf b){return abs(b)<1e-5?a:fgcd(b,fmod(a,b));}
 
 ### 高级模操作
 
-#### 同余方程组 | CRT+extra
+#### CRT+extra
 
 ```c++
 //CRT，m[i]两两互质
@@ -229,7 +226,7 @@ ll excrt(ll a[],ll m[],int n){ //ans%m[i]==a[i]
 }
 ```
 
-#### 离散对数 | BSGS+extra
+#### 离散对数 using BSGS+extra
 
 - 求 $a^x \equiv b \pmod m$ ，$O(\sqrt m)$
 
@@ -552,7 +549,7 @@ namespace Min25 {
 
 ### 素数约数相关
 
-#### 唯一分解 质因数分解
+#### 唯一分解 / 质因数分解
 
 - 用数组表示数字唯一分解式的素数的指数，如 $50=\{1,0,2,0,…\}$
 - 可以用来计算阶乘和乘除操作
@@ -591,21 +588,9 @@ struct fac{
 }f;
 ```
 
-#### 素数判定 | 朴素 or Miller-Rabin
+#### 素数判定 using Miller-Rabin
 
-- 朴素算法，$O(\sqrt n)$
-
-```c++
-bool isprime(int n){
-	if(n<=3)return n>=2;
-	if(n%2==0 || n%3==0)return 0;
-	repeat(i,1,int(sqrt(n)+1.5)/6+1)
-		if(n%(i*6-1)==0 || n%(i*6+1)==0)return 0;
-	return 1;
-}
-```
-
-- Miller-Rabin素性测试，$O(\cdot\log^3 n)$
+- $O(\log^3 n)$
 
 ```c++
 bool mr(ll x,ll b){
@@ -627,9 +612,9 @@ bool isprime(ll x){
 }
 ```
 
-#### 大数分解 | Pollard-rho
+#### 大数分解 using Pollard-rho
 
-- $O(n^{\tfrac 1 4})$，基于MR素性测试
+- $O(n^{\tfrac 1 4})$，基于Miller-Rabin素性测试
 
 ```c++
 ll pollard_rho(ll x){
@@ -945,7 +930,7 @@ pii fib(ll n){ //fib(n).fi即结果
 }
 ```
 
-#### 佩尔方程×Pell
+#### 佩尔方程 / Pell
 
 - $x^2-dy^2=1$，$d$ 是正整数
 - 若 $d$ 是完全平方数，只有平凡解 $(\pm 1,0)$，其余情况总有非平凡解
@@ -978,7 +963,7 @@ bool PQA(ll D, ll &x, ll &y){
 
 ## 组合数学
 
-### 组合数取模 | Lucas+extra
+### 组合数取模 using Lucas+extra
 
 - Lucas定理用来求模意义下的组合数
 - 真·Lucas，$p$ 是质数（~~后面的exLucas都不纯正~~）
@@ -1044,7 +1029,7 @@ ll exlucas(ll a,ll b,ll mod){
 }
 ```
 
-### 康托展开+逆 编码与解码
+### 康托展开+anti and 编码与解码
 
 <H4>康托展开+逆</H4>
 
@@ -1167,11 +1152,11 @@ repeat(i,0,N){
 
 ***
 
-- 卡塔兰数×卡特兰数×Catalan，$H_n=\dfrac{\binom{2n}n}{n+1}$，$H_n=\dfrac{H_{n-1}(4n-2)}{n+1}$
+- 卡塔兰数 卡特兰数 Catalan，$H_n=\dfrac{\binom{2n}n}{n+1}$，$H_n=\dfrac{H_{n-1}(4n-2)}{n+1}$
 
 ***
 
-- 贝尔数×Bell，划分n个元素的集合的方案数
+- 贝尔数 Bell，划分n个元素的集合的方案数
 
 ```c++
 B[0]=B[1]=1;
@@ -1196,7 +1181,7 @@ repeat(i,0,N-1){
 
 ***
 
-- 第一类斯特林数×Stirling
+- 第一类斯特林数 Stirling
 - 多项式 $x(x-1)(x-2) \cdots (x-n+1)$ 展开后 $x^r$ 的系数绝对值记作 $s(n,r)$ （系数符号 $(-1)^{n+r}$）
 - 也可以表示 $n$ 个元素分成 $r$ 个环的方案数
 - 递推式 $s(n,r) = (n-1)s(n-1,r)+s(n-1,r-1)$
@@ -1206,7 +1191,7 @@ repeat(i,0,N-1){
 
 ***
 
-- 第二类斯特林数×Stirling
+- 第二类斯特林数 Stirling
 - $n$ 个不同的球放入 $r$ 个相同的盒子且无空盒的方案数，记作 $S(n,r)$ 或 $S_n^r$
 - 递推式 $S(n,r) = r S(n-1,r) + S(n-1,r-1)$
 - 通项公式 $\displaystyle S(n,r)=\frac{1}{r!}\sum_{i=0}^r(-1)^i{r\choose i}(r-i)^n$
@@ -1239,7 +1224,7 @@ int M(int a,int b){
 
 ## 博弈论
 
-### SG函数 SG定理
+### SG定理
 
 - 有向无环图中，两个玩家轮流推多颗棋子，不能走的判负
 - 假设 $x$ 的后继状态为 $y_1,y_2,...,y_k$
@@ -1285,7 +1270,7 @@ Moore's Nimk
 
 ***
 
-扩展威佐夫博弈×Extra Wythoff's Game
+扩展威佐夫博弈 / Extra Wythoff's Game
 
 - 两堆石子，分别为 $a,b$，每次取一堆的任意非空的石子或者取两堆数量之差的绝对值小于等于 $k$ 的石子
 - 解：假设 $a\le b$，当且仅当存在自然数 $n$ 使得 $a=\lfloor n\dfrac{\sqrt{(k+1)^2+4}-(k-1)}2\rfloor,b=a+n(k+1)$，先手必败
@@ -1293,14 +1278,14 @@ Moore's Nimk
 
 ***
 
-斐波那契博弈×Fibonacci Nim
+斐波那契博弈 / Fibonacci Nim
 
 - 一堆石子 $n,n\ge 2$，先手第一次只能取 $[1,n-1]$，之后每次取的石子数不多于对手刚取的石子数的 $2$ 倍且非空
 - 先手必败当且仅当 $n$ 是Fibonacci数
 
 ***
 
-阶梯Nim×Staircase Nim
+阶梯Nim / Staircase Nim
 
 - $n$ 堆石子，每次选择一堆取任意非空的石子放到前一堆，第 $1$ 堆的石子可以放到第 $0$ 堆
 - 先手必败当且仅当奇数堆的石子数异或和为 $0$
@@ -1341,7 +1326,7 @@ int calc(ll n,int k){ //n<=1e8,k<=1e5
 
 ***
 
-Anti-SG | SJ定理
+Anti-SG using SJ定理
 
 - $n$ 个游戏，移动不了的人获胜
 - 先手必胜当且仅当
@@ -1359,7 +1344,7 @@ Every-SG
 - u->v,SG(v)=0，step(u)=min(step(v))+1
 - 先手必胜当且仅当所有游戏的step的最大值为奇数
 
-### 删边游戏×Green Hachenbush
+### 删边游戏 / Green Hachenbush
 
 - 树上删边游戏
 	- 一棵有根树，每次可以删除一条边并移除不和根连接的部分
@@ -1377,7 +1362,7 @@ Every-SG
 	- Ruler Game，每次翻转一个区间的硬币，$SG(n)=lowbit(n)$
 	- Mock Turtles Game，每次翻转不多于 $3$ 枚硬币 $SG(n)=2n-1-popcount(n-1)\%2$
 
-### 高维组合游戏 | Nim积
+### 高维组合游戏 using Nim积
 
 - Nim和与Nim积的关系类似加法与乘法
 - Tartan定理：对于一个高维的游戏（多个维度的笛卡尔积），玩家的操作也是笛卡尔积的形式，那么对每一维度单独计算SG值，最终的SG值为它们的Nim积
@@ -1402,7 +1387,7 @@ struct Nim{
 //ans^=nim.f(SG(x),nim.f(SG(y),SG(z)));
 ```
 
-### 不平等博弈 | 超现实数
+### 不平等博弈 using 超现实数
 
 ***
 
@@ -1476,7 +1461,7 @@ ll calc(int x,int y){ //get surreal number
 
 ***
 
-无向点地理问题×Undirected vertex geography problem
+无向点地理问题 / Undirected vertex geography problem
 
 - 二分图上移动棋子，不能经过重复点
 - 先手必败当且仅当存在一个不包含起点的最大匹配
@@ -1601,7 +1586,7 @@ void polymul_special(ll a[],ll b[],int n,ll c[]){ //c[i]=a[j]*b[k],i=j*k
 }
 ```
 
-#### 快速傅里叶变换×FTT+任意模数
+#### 快速傅里叶变换 / FTT+任意模数
 
 - 离散傅里叶变换(DFT)即求 $(\omega_n^k,f(\omega_n^k))$，多项式 $\displaystyle d_k=\sum_{i=0}^{n-1}a_i(\omega_n^k)^i$
 - 离散傅里叶反变换(IDFT)即求多项式 $(\omega_n^{-k},g(\omega_n^{-k}))$，多项式 $\displaystyle c_k=\sum_{i=0}^{n-1}d_i(\omega_n^{-k})^i$，最后 $a_i=\dfrac {c_i}{n}$
@@ -1697,7 +1682,7 @@ struct FFT{
 }fft;
 ```
 
-#### 快速数论变换×NTT
+#### 快速数论变换 / NTT
 
 ```c++
 //const ll mod=998244353;
@@ -1733,7 +1718,7 @@ void conv(ll a[],ll b[],int n,ll c[],const function<ll(ll,ll)> &f=[](ll a,ll b){
 }
 ```
 
-#### 快速沃尔什变换×FWT
+#### 快速沃尔什变换 / FWT
 
 - 计算 $\displaystyle c_i=\sum_{i=f(j,k)}a_jb_k$，$O(n\log n)$
 
@@ -1819,7 +1804,7 @@ void polyexp(ll a[],int n,ll b[]){ //n=2^k, g!=f
 - 遇到 $\displaystyle \sum_{i=0}^n[i\%k=0]f(i)$ 可以转换为 $\displaystyle \sum_{i=0}^n\dfrac 1 k\sum_{j=0}^{k-1}(\omega_k^i)^jf(i)$
 - 广义二项式定理 $\displaystyle (1+x)^{\alpha}=\sum_{i=0}^{\infty}{n\choose \alpha}x^i$
 
-##### 普通生成函数×OGF
+##### 普通生成函数 / OGF
 
 - 普通生成函数：$A(x)=a_0+a_1x+a_2x^2+...=\langle a_0,a_1,a_2...\rangle$
 - $1+x^k+x^{2k}+...=\dfrac{1}{1-x^k}$
@@ -1834,7 +1819,7 @@ void polyexp(ll a[],int n,ll b[]){ //n=2^k, g!=f
 - 前缀和 $\displaystyle \sum_{n=0}^{\infty}s_nx^n=\dfrac{1}{1-x}f(x)$
 - 五边形数定理：$\displaystyle \prod_{i=1}^{\infty}(1-x^i)=\sum_{k=0}^{\infty}(-1)^kx^{\frac 1 2k(3k\pm 1)}$
 
-##### 指数生成函数×EGF
+##### 指数生成函数 / EGF
 
 - 指数生成函数：$A(x)=a_0+a_1x+a_2\dfrac{x^2}{2!}+a_3\dfrac{x^3}{3!}+...=\langle a_0,a_1,a_2,a_3,...\rangle$
 - 普通生成函数转换为指数生成函数：系数乘以 $n!$
@@ -1847,7 +1832,7 @@ void polyexp(ll a[],int n,ll b[]){ //n=2^k, g!=f
 
 ### 矩阵
 
-#### 矩阵乘法 矩阵快速幂
+#### 矩阵乘法 and 矩阵快速幂
 
 - 已并行优化，矩乘 $O(n^3)$，矩快 $O(n^3\log b)$
 
@@ -1883,7 +1868,7 @@ mat qpow(mat a,ll b){
 }
 ```
 
-#### 矩阵高级操作
+#### 高斯消元
 
 - 行列式、逆矩阵（luogu P3389 && luogu P4783）
 - $O(n^3)$
@@ -2134,7 +2119,7 @@ struct basis{
 }b;
 ```
 
-#### 线性规划 | 单纯形法
+#### 线性规划 using 单纯形法
 
 - 声明：还没学会
 - $\left[\begin{array}{ccccccc} a & a & a & a & a & a & b \\ a & a & a & a & a & a & b \\ a & a & a & a & a & a & b \\ c & c & c & c & c & c & v \end{array}\right]$
@@ -2473,9 +2458,7 @@ ll calc(const string &in){ //后缀求值
 }
 ```
 
-### 一些数学结论
-
-#### 约瑟夫问题
+### 约瑟夫问题
 
 - n个人编号0..(n-1)，每次数到k出局，求最后剩下的人的编号
 - 线性算法，$O(n)$
@@ -2501,9 +2484,7 @@ int jos(int n,int k){
 }
 ```
 
-#### 格雷码×gray 汉诺塔
-
-<H5>格雷码</H5>
+### 格雷码
 
 - 一些性质：
 - 相邻格雷码只变化一次
@@ -2530,7 +2511,7 @@ ll degrey(ll n){ //逆格雷码变换，法二
 }
 ```
 
-<H5>汉诺塔</H5>
+### 汉诺塔
 
 - 假设盘数为n，总共需要移动 `(1<<n)-1` 次
 - 第k次移动第 `i=__builtin_ctzll(n)+1` 小的盘子
@@ -2556,7 +2537,7 @@ repeat(k,1,(1<<n)){
 
 - 4个柱子的汉诺塔情况：令 $k=\lfloor n+1-\sqrt{2n+1}+0.5\rfloor$，让前k小的盘子用4个柱子的方法移到2号柱，其他盘子用3个柱子的方法移到4号柱，最后再移一次前k小，最短步数 $f(n)=2f(k)+2^{n-k}-1$
 
-#### Stern-Brocot树 Farey序列
+### Stern-Brocot树 and Farey序列
 
 - 分数序列：在 $[\dfrac 0 1,\dfrac 1 0]$ 中不断在 $\dfrac a b$ 和 $\dfrac c d$ 之间插入 $\dfrac {a+c}{b+d}$
 - 性质：所有数都是既约分数、可遍历所有既约分数、保持单调递增
@@ -2564,9 +2545,9 @@ repeat(k,1,(1<<n)){
 - Farey序列：$F_n$ 是所有分子分母 $\le n$ 的既约分数按照分数序列顺序排列后的序列
 - $F_n$ 的长度 $=1+\sum\limits_{i=1}^n\varphi(i)$
 
-#### 浮点与近似计算
+### 浮点与近似计算
 
-<H5>数值积分 | 自适应辛普森法</H5>
+<H4>数值积分 using 自适应辛普森法</H4>
 
 - 求 $\int_{l}^{r}f(x)\mathrm{d}x$ 的近似值
 
@@ -2584,7 +2565,7 @@ lf asr(lf l,lf r,lf eps,lf ans){
 //调用方法：asr(l,r,eps,raw(l,r))
 ```
 
-<H5>牛顿迭代法</H5>
+<H4>牛顿迭代法</H4>
 
 - 求 $f(x)$ 的零点：$x_{n+1}=x_n-\dfrac{f(x)}{f'(x)}$
 - 检验 $x_{n+1}=g(x_n)$ 多次迭代可以收敛于 $x_0$ 的方法：看 $|g'(x_0)|\le1$ 是否成立
@@ -2617,12 +2598,48 @@ public static BigInteger isqrtNewton(BigInteger n){
 }
 ```
 
-<H5>others of 浮点与近似计算</H5>
+<H4>others of 浮点与近似计算</H4>
 
 - $\lim\limits_{n\rightarrow\infty}\dfrac{错排(n)}{n!}=\dfrac 1 e,e\approx 2.718281828459045235360287471352$
 - $\lim\limits_{n\rightarrow\infty}(\sum\frac 1 n-\ln n)=\gamma\approx 0.577215664901532860606$
 
-#### others of 数学杂项
+### 日期换算
+
+- 基姆拉尔森公式（已知年月日，求星期）
+
+```c++
+int week(int y,int m,int d){
+	if(m<=2)m+=12,y--;
+	return (d+2*m+3*(m+1)/5+y+y/4-y/100+y/400)%7+1;
+}
+```
+
+- 标准阳历与儒略日转换
+
+```c++
+int DateToInt(int y, int m, int d){
+	return
+	1461 * (y + 4800 + (m - 14) / 12) / 4 +
+	367 * (m - 2 - (m - 14) / 12 * 12) / 12 -
+	3 * ((y + 4900 + (m - 14) / 12) / 100) / 4 +
+	d - 32075;
+}
+void IntToDate(int jd, int &y, int &m, int &d){
+	int x, n, i, j;
+	x = jd + 68569;
+	n = 4 * x / 146097;
+	x -= (146097 * n + 3) / 4;
+	i = (4000 * (x + 1)) / 1461001;
+	x -= 1461 * i / 4 - 31;
+	j = 80 * x / 2447;
+	d = x - 2447 * j / 80;
+	x = j / 11;
+	m = j + 2 - 12 * x;
+	y = 100 * (n - 49) + i + x;
+}
+```
+
+### others of 数学杂项
 
 ***
 
@@ -2661,45 +2678,7 @@ public static BigInteger isqrtNewton(BigInteger n){
 
 ***
 
-- 基姆拉尔森公式
-- 已知年月日，返回星期几
-
-```c++
-int week(int y,int m,int d){
-	if(m<=2)m+=12,y--;
-	return (d+2*m+3*(m+1)/5+y+y/4-y/100+y/400)%7+1;
-}
-```
-
-***
-
-标准阳历与儒略日转换
-
-```c++
-int DateToInt(int y, int m, int d){
-	return
-	1461 * (y + 4800 + (m - 14) / 12) / 4 +
-	367 * (m - 2 - (m - 14) / 12 * 12) / 12 -
-	3 * ((y + 4900 + (m - 14) / 12) / 100) / 4 +
-	d - 32075;
-}
-void IntToDate(int jd, int &y, int &m, int &d){
-	int x, n, i, j;
-	x = jd + 68569;
-	n = 4 * x / 146097;
-	x -= (146097 * n + 3) / 4;
-	i = (4000 * (x + 1)) / 1461001;
-	x -= 1461 * i / 4 - 31;
-	j = 80 * x / 2447;
-	d = x - 2447 * j / 80;
-	x = j / 11;
-	m = j + 2 - 12 * x;
-	y = 100 * (n - 49) + i + x;
-}
-```
-***
-
-求 sum(n/i)
+求 $\displaystyle \sum_{i=1}^n \lfloor \dfrac n i \rfloor$
 
 ```c++
 int f(int n){
@@ -2712,6 +2691,6 @@ int f(int n){
 
 ***
 
-n 维超立方体有 $2^{n-i}×C(n, i)$ 个 i 维元素
+n 维超立方体有 $\displaystyle 2^{n-i} {n \choose i}$ 个 $i$ 维元素
 
 ***
