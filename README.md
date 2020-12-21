@@ -4,7 +4,7 @@
 
 直接查看是无法渲染公式的，建议下载
 
-已上传release(202012)
+已上传[release(202012)](https://github.com/axiomofchoice-hjt/ACM-axiomofchoice/releases/tag/Axiomofchoice202012)
 
 ## 关于作者
 
