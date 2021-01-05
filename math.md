@@ -356,7 +356,7 @@ void get_inv(int n,int m=mod){
 }
 ```
 
-求a[1..n]的逆元，离线，$O(n)$
+求 $a[1..n]$ 的逆元，离线，$O(n)$
 
 ```c++
 void get_inv(int a[],int n){ //求a[1..n]的逆元，存在inv[1..n]中
@@ -1522,7 +1522,7 @@ repeat(i,0,n)if(!vis[i]){
 
 ### 多项式
 
-技能树：拉格朗日反演，多项式开根、快速幂、除法、三角反三角，分治FFT，快速插值和多点求值
+技能树：拉格朗日反演，多项式快速幂、除法、三角反三角，快速插值和多点求值
 
 #### 拉格朗日插值
 
@@ -1565,7 +1565,7 @@ ll solve(int n,int x0){ //(i,y[i]),i=1..n的优化
 ```c++
 inline ll D(ll x){return x>=mod?x-mod:x<0?x+mod:x;}
 inline ll &ad(ll &x){return x=D(x);}
-int polyinit(ll a[],int n1){
+int polyinit(ll a[],int n1){ //a[0..n1-1]
 	int n=1; while(n<n1)n<<=1;
 	fill(a+n1,a+n,0);
 	return n;
@@ -1806,7 +1806,7 @@ void polyexp(ll a[],int n,ll b[]){ //n=2^k, g!=f
 
 ##### 普通生成函数 / OGF
 
-- 普通生成函数：$A(x)=a_0+a_1x+a_2x^2+...=\langle a_0,a_1,a_2...\rangle$
+- 普通生成函数：$A(x)=a_0+a_1x+a_2x^2+...=\langle a_0,a_1,a_2,...\rangle$
 - $1+x^k+x^{2k}+...=\dfrac{1}{1-x^k}$
 - 取对数后 $\displaystyle=-\ln(1-x^k)=\sum_{i=1}^{\infty}\dfrac{1}{i}x^{ki}$ 即 $\displaystyle\sum_{i=1}^{\infty}\dfrac{1}{i}x^i\otimes x^k$（polymul_special）
 - $x+\dfrac{x^2}{2}+\dfrac{x^3}{3}+...=-\ln(1-x)$
@@ -1854,6 +1854,21 @@ struct mat{
 				(ans.a[i][j]+=t*b.a[k][j])%=mod;
 		}
 		return ans;
+	}
+	vector<ll> operator*(const vector<ll> &b)const{
+		vector<ll> ans(n);
+		repeat(i,0,n)
+		repeat(j,0,n)
+			(ans[i]+=a[i][j]*b[j])%=mod;
+		return ans;
+	}
+	void print(){
+		cout<<"mat size="<<n<<endl;
+		repeat(i,0,n){
+			repeat(j,0,n)
+				cout<<a[i][j]<<' ';
+			cout<<endl;
+		}
 	}
 	ll *operator[](int x){return a[x];}
 	const ll *operator[](int x)const{return a[x];}
