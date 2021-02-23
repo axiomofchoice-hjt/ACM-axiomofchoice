@@ -22,7 +22,7 @@
 	- [整点向量线性基](#整点向量线性基)
 	- [多边形构造](#多边形构造)
 	- [欧拉图更新 using 套圈算法](#欧拉图更新-using-套圈算法)
-	- [Voronoi图](#voronoi图)
+	- [Voronoi 图](#voronoi-图)
 	- [矩形孔明棋](#矩形孔明棋)
 	- [削平山顶](#削平山顶)
 	- [瓶颈费用最大流](#瓶颈费用最大流)
@@ -42,14 +42,29 @@
 	- [杨表 / Young tableaux](#杨表--young-tableaux)
 	- [奇怪的矩阵公式](#奇怪的矩阵公式)
 	- [最大权不下降子序列](#最大权不下降子序列)
+	- [强连通分量SCC using Kosaraju](#强连通分量scc-using-kosaraju)
+	- [2-sat using SCC](#2-sat-using-scc)
+	- [网格路径计数](#网格路径计数)
+	- [线性代数复习](#线性代数复习)
+	- [组合数学结论](#组合数学结论)
+	- [多项式全家桶 vector 版](#多项式全家桶-vector-版)
+	- [多项式快速幂](#多项式快速幂)
+	- [多项式复合](#多项式复合)
+	- [多项式多点求值](#多项式多点求值)
+	- [括号序列专题](#括号序列专题)
+	- [减一的杨辉矩阵](#减一的杨辉矩阵)
+	- [区间历史最值](#区间历史最值)
+	- [K-D tree 模板更新](#k-d-tree-模板更新)
 
 # unclassified
 
 ## Notice
 
 - 求 $\displaystyle B_i = \sum_{k=i}^n C_k^iA_k$，即 $\displaystyle B_i=\dfrac{1}{i!}\sum_{k=i}^n\dfrac{1}{(k-i)!}\cdot k!A_k$，反转后卷积
-- `__builtin_expect(!!(exp),1),__builtin_expect(!!(exp),0)` 放在if()中，如果exp大概率为真/假则可以优化常数
+- `__builtin_expect(!!(expr),1),__builtin_expect(!!(expr),0)` 放在 if() 中，如果 expr 大概率为真/假则可以优化常数
 - 多物网络流：$k$ 个源汇点，$S_i$ 需要流 $f_i$ 单位流量至 $T_i$。多物网络流只能用线性规划解决
+- 树上倍增lca板子里，dfs应该在dis赋值的后面！！！
+- 范德蒙德卷积公式：$\displaystyle{\sum_{k}\binom{r}{k}\binom{s}{n-k}=\binom{r+s}{n}}$
 
 ## 费马-欧拉素数定理补充
 
@@ -57,12 +72,14 @@
 - 对于模 $4$ 余 $1$ 的素数有费马-欧拉素数定理
 - 对于完全平方数有 $x^2=x^2+0^2$
 - 对于合数有 $(a^2+b^2)(c^2+d^2)=(ac+bd)^2+(ad-bc)^2$
-- 对于无法用上述方式，即合数但是指数为奇数的素因子模 $4$ 余 $3$，不能分解为两整数平方和
+- 对于无法用上述方式，即存在模 $4$ 余 $3$ 的、指数为奇数的素因子，不能分解为两整数平方和
+- （本质上是一个整数分解为高斯素数的过程）
+- 令 $\chi[1^+]=1,0,-1,0,1,0,-1\ldots$，是一个完全积性函数。正整数 $n$ 分解为两个整数平方和的方案数为 $n$ 所有约数 $\chi$ 值之和，$f(n)=\sum_{d\mid n}\chi(d)$
 
 ## 卡常操作
 
 ```c++
-int mul(int a,int b,int m=mod){ // 模乘
+int mul(int a,int b,int m=mod){ // 汇编模乘
 	int ret;
 	__asm__ __volatile__ ("\tmull %%ebx\n\tdivl %%ecx\n"
 		:"=d"(ret):"a"(a),"b"(b),"c"(m));
@@ -123,7 +140,7 @@ void polydivmod(ll f[],ll g[],int n,int m,ll d[],ll r[]){
 	reverse_copy(g,g+m,A);
 	fill(A+m,A+n*2,0);
 	polyinv(A,n,B);
-	fill(B+n,B+n*2,0); 
+	fill(B+n,B+n*2,0);
 	reverse_copy(f,f+n,A);
 	fill(A+n,A+n*2,0);
 	conv(A,B,n*2,d);
@@ -424,7 +441,7 @@ void Solve(){
 
 - 默认是连通图！
 - 无向图
-	- 若存在则路径为 $dfs$ 退出序（最后的序列还要再反过来）（如果for从小到大，可以得到最小字典序）
+	- 若存在则路径为 DFS 退出序（最后的序列还要再反过来）（如果for从小到大，可以得到最小字典序）
 	- （不记录点的 $vis$，只记录边的 $vis$）
 - 有向图
 	- 欧拉回路存在当且仅当所有点入度等于出度
@@ -435,9 +452,9 @@ void Solve(){
 	- 欧拉路径还没研究过
 	- 无向边任意定向算法。每次找 `outdeg>indeg` 的点向 `outdeg<indeg` 的任意点连一条任意路径，要求只经过无向边，将路径上的边转换为有向边，欧拉路径存在条件仍满足。当所有点都有 `outdeg==indeg`，直接反图跑退出序
 
-## Voronoi图
+## Voronoi 图
 
-- Delaunay三角剖分后，每个线段中垂线构成Voronoi图
+- Delaunay 三角剖分后，每个线段中垂线构成Voronoi 图
 - 它们互为对偶图
 
 ## 矩形孔明棋
@@ -941,4 +958,971 @@ void insert(map<ll,ll> &mp,vector<pii> &push,vector<pii> &pop){ // pii = <x,v>
 }
 // init: mp.clear(),mp[INF]=INF;
 // query: INF-mp[i].rbegin()->se
+```
+
+## 强连通分量SCC using Kosaraju
+
+- 编号从 $1$ 开始，$O(V+E)$
+
+```c++
+int co[N],sz[N]; // (output) co: vertex color, sz: number of vertices of color i
+bool vis[N]; vector<int> q; // private
+vector<int> a[N],b[N]; // (input) a: graph, b:invgraph
+int cnt; // (output) cnt: color number
+void dfs1(int x){
+	vis[x]=1;
+	for(auto p:a[x])if(!vis[p])dfs1(p);
+	q.push_back(x);
+}
+void dfs2(int x,int c){
+	vis[x]=0; co[x]=c; sz[c]++;
+	for(auto p:b[x])if(vis[p])dfs2(p,c);
+}
+void getscc(int n){
+	fill(vis,vis+n+1,0);
+	fill(sz,sz+n+1,0);
+	cnt=0; q.clear();
+	repeat(i,1,n+1)if(!vis[i])dfs1(i);
+	reverse(q.begin(),q.end());
+	for(auto i:q)if(vis[i])dfs2(i,++cnt);
+}
+```
+
+## 2-sat using SCC
+
+- 编号从 $1$ 开始，$O(V+E)$，注意 $N$ 需要手动两倍
+
+```c++
+bool ans[N]; // shows one solution if possible
+bool twosat(int n){ // return whether possible
+	getscc(n*2);
+	repeat(i,1,n+1)
+		if(co[i]==co[i+n])return 0;
+	repeat(i,1,n+1)
+		ans[i]=(co[i]<co[i+n]);
+	return 1;
+}
+```
+
+## 网格路径计数
+
+- 从 $(0,0)$ 走到 $(a,b)$，每次只能从 $(x,y)$ 走到 $(x+1,y-1)$ 或 $(x+1,y+1)$，方案数记为 $f(a,b)=\dbinom{a}{\tfrac{a+b}{2}}$
+- 若路径和直线 $y=k,k\notin [0,b]$ 不能有交点，则方案数为 $f(a,b)−f(a,2k−b)$
+- 若路径和两条直线 $y=k_1,y=k_2,k_1<0\le b<k_2$ 不能有交点，方案数记为 $g(a,b,k_1,k_2)$，必须碰到 $y=k_1$ 不能碰到 $y=k_2$ 的方案数记为 $h(a,b,k_1,k_2)$，可递归求解（递归过程中两条直线距离会越来越大），$O(n)$
+
+```c++
+ll f(ll a,ll b){ // (0,0) -> (a,b)
+	if((a+b)%2==1)return 0;
+	return C(a,(a+b)/2);
+}
+ll h(ll,ll,ll,ll);
+ll g(ll a,ll b,ll k1,ll k2){ // (0,0) -> (a,b), can't meet y=k1 or y=k2
+	if(a<abs(b))return 0;
+	return (f(a,b)-f(a,2*k2-b)-h(a,b,k1,k2)+mod+mod)%mod;
+}
+ll h(ll a,ll b,ll k1,ll k2){ // (0,0) -> (a,b), must meet y=k1, can't meet y=k2
+	if(a<abs(b) || a<abs(2*k1-b))return 0;
+	return (g(a,2*k1-b,2*k1-k2,k2)+h(a,b,2*k1-k2,k2))%mod;
+}
+```
+
+- 从 $(0,0)$ 走到 $(a,0)$，只能右上/右下，必须有恰好一次传送（向下 $b$ 单位），不能走到 $x$ 轴下方，方案数为 $\dbinom{a+1}{\frac{a-b}{2}+k+1}$
+
+refer to [博客](https://www.luogu.com.cn/blog/wolfind/yi-suo-ge-lu-jing-ji-shuo-wen-ti)
+
+## 线性代数复习
+
+- 伴随矩阵 $A^*=|A|A^{-1}$，$A^*_{j,i}=A$ 去掉 $i$ 行 $j$ 列后的矩阵的行列式乘以 $(-1)^{i+j}$，注意转置的问题
+
+## 组合数学结论
+
+- 卡特兰数 $C_n$ 
+- 有 $2\nmid C_n\rightarrow n=2^k-1$
+- Hankel 矩阵：$n\times n$ 矩阵 $A_{i,j}=C_{i+j-2}$，有 $\det A=1$，$B_{i,j}=C_{i+j-1}$，也有 $\det B=1$。反过来可以用 $A,B$ 定义卡特兰数
+
+***
+
+- Bell 数 $B_n$
+- $\sum_{n=0}^{\infty}B_n\dfrac{x^n}{n!}=e^{e^x-1}$
+
+***
+
+- 超级卡特兰数 $S_n$，
+- 若 $n\times n$ 矩阵 $A_{i,j}=S_{i+j-1}$，则 $\det A=2^{\tfrac{n(n+1)}{2}}$
+- $S_n$ 为在 $n\times n$ 的矩形中选定 $n$ 个点和 $n$ 条水平/竖直的线段，满足每条线段恰好经过一个点且每个点恰好只被一条线段经过且线段直接不出现十字交叉，这 $n$ 条线段把矩形划分成 $n+1$ 个小矩形的方案数
+
+***
+
+- A001006 Motzkin 数 $M_n$
+- 1, 1, 2, 4, 9, 21, 51, 127, 323, 835, 2188, 5798, 15511, 41835, 113634, 310572, 853467
+- 表示在圆上 $n$ 个点连接任意个不相交弦的方案数
+- 也是 $(0,0)$ 走到 $(n,0)$ ，只能右/右上/右下走，不能走到 $x$ 轴下方的方案数
+- $M_0=1,M_n=\tfrac{2n+1}{n+2}M_{n-1}+\tfrac{3n-3}{n+2}M_{n-2}$
+
+***
+
+- Eulerian 数 $\left\langle n\atop m\right\rangle$
+- 表示 $1\ldots n$ 的排列，有 $m$ 个数比它前一个数大的方案数
+- $\left\langle 1\atop 0\right\rangle=1,\left\langle n\atop m\right\rangle=(n-m)\left\langle n-1\atop m-1\right\rangle+(m+1)\left\langle n-1\atop m\right\rangle$
+- $\sum_{m=0}^{n-1}\left\langle n\atop m\right\rangle=n!$
+
+***
+
+- Narayana 数 $N(n,k)$
+- $N(n,k)=\dfrac 1 n\dbinom{n
+}{k}\dbinom{n}{k-1}$
+- $C_n=\sum\limits_{i=1}^nN(n,i)$
+- 表示 $n$ 对匹配括号组成的字符串中有 $k$ 个 `()` 子串的方案数
+- 表示 $(0,0)$ 走到 $(2n,0)$，只能右上/左下，有 $k$ 个波峰的方案数
+
+***
+
+- Delannoy 数 $D(m,n)$
+- 表示 $(0,0)$ 走到 $(m,n)$，只能右/上/右上的方案数
+- 递推公式即简单 dp
+- $D(m,n)=\sum\limits_{k=0}^{\min(m,n)}{m+n-k\choose m}{m\choose k}$
+- $D(m,n)=\sum\limits_{k=0}^{\min(m,n)}{m\choose k}{n\choose k}2^k$
+
+***
+
+- A001003 Hipparchus 数 / 小 Schroeder 数 $S(n)$
+- 1, 1, 3, 11, 45, 197, 903, 4279, 20793, 103049, 518859, 2646723, 13648869, 71039373
+- 表示 $(0,0)$ 走到 $(n,n)$，只能右/上/右上，不能沿 $y=x$ 走，且只能在 $y\le x$ 区域走的方案数
+- $S(0)=S(1)=1,S(n)=\frac{(6n-3)S(n-1)-(n-2)S(n-2)}{n+1}$ `s[i]=((6*i-3)*s[i-1]-(i-2)*s[i-2])/(i+1)`
+- 表示 $n+2$ 边形的多边形剖分数
+
+***
+
+- A000670 Fubini 数 $a(n)$
+- 1, 1, 3, 13, 75, 541, 4683, 47293, 545835, 7087261, 102247563, 1622632573, 28091567595
+- 表示 $n$ 个元素组成偏序集的个数
+- $a(0)=1,a(n)=\sum_{k=1}^{n}\dbinom n k a(n-k)$
+
+***
+
+- A000111 Euler 数 $E(n)$
+- 1, 1, 1, 2, 5, 16, 61, 272, 1385, 7936, 50521, 353792, 2702765, 22368256, 199360981
+- 其指数型生成函数为 $\dfrac{1}{\cos x}+\tan x$，前者提供偶数项 (A000364)，后者提供奇数项
+- 表示满足 $x_1>x_2<x_3>x_4<\ldots x_n$ 的排列的方案数
+
+```c++
+vi calc(int n){
+	n=polyn(n);
+	return eachfac(conv(
+		inv(cos(vi({0,1}),n),n), // 1/cos(x)
+		sin(vi({0,1}),n), // sin(x)
+		n,fxy((x*y+x)%mod)
+	),n); // 1/cos(x)+tan(x)
+}
+```
+
+## 多项式全家桶 vector 版
+
+- vector 版常数很大，多项式开根中 $n=10^5$ 有 3 倍常数
+
+```c++
+ll D(ll x){return x>=mod?x-mod:x<0?x+mod:x;}
+ll &ad(ll &x){return x=D(x);}
+typedef vector<ll> vi;
+#define rs(a) [&]{if((int)a.size()<n)a.resize(n,0);}()
+#define cut(a) fill(a.begin()+n/2,a.begin()+n,0)
+#define fxy(z) [&](ll x,ll y){return z;} // not appeared
+int polyn(int n1){ // return 2^k >= n1
+	return 1<<(31-__builtin_clz(n1-1)+1);
+}
+vi der(vi a,int n){ // b=da/dx
+	rs(a);
+	repeat(i,1,n)a[i-1]=i*a[i]%mod; a[n-1]=0;
+	return a;
+}
+vi cal(vi a,int n){ // b=\int adx
+	rs(a);
+	repeat_back(i,1,n)a[i]=qpow(i,mod-2,mod)*a[i-1]%mod; a[0]=0;
+	return a;
+}
+vi eachfac(vi a,int n){ // ans[i]=a[i]*i!
+	ll p=1;
+	repeat(i,1,n)p=p*i%mod,a[i]=a[i]*p%mod;
+	return a;
+}
+vi readpoly(int n){
+	vi a; repeat(i,0,n)a<<read();
+	return a;
+}
+void print(vi a,int n){
+	rs(a);
+	repeat(i,0,n)printf("%lld%c",a[i]," \n"[i==n-1]);
+}
+
+// ********************************
+
+void ntt(vi &a,ll n,ll op){ // n=2^k
+	rs(a);
+	for(int i=1,j=n>>1;i<n-1;++i){
+		if(i<j)swap(a[i],a[j]);
+		int k=n>>1;
+		while(k<=j)j-=k,k>>=1;
+		j+=k;
+	}
+	for(int len=2;len<=n;len<<=1){
+		ll rt=qpow(3,(mod-1)/len,mod);
+		for(int i=0;i<n;i+=len){
+			ll w=1;
+			repeat(j,i,i+len/2){
+				ll u=a[j],t=1ll*a[j+len/2]*w%mod;
+				a[j]=D(u+t),a[j+len/2]=D(u-t);
+				w=1ll*w*rt%mod;
+			}
+		}
+	}
+	if(op==-1){
+		reverse(a.begin()+1,a.begin()+n);
+		ll in=qpow(n,mod-2,mod);
+		repeat(i,0,n)a[i]=1ll*a[i]*in%mod;
+	}
+}
+vi conv(vi a,vi b,int n,const function<ll(ll,ll)> &f=[](ll a,ll b){return a*b%mod;}){ // n=2^k, ans=a*b
+	n*=2; rs(a),rs(b); cut(a),cut(b);
+	ntt(a,n,1); ntt(b,n,1);
+	repeat(i,0,n)a[i]=f(a[i],b[i]);
+	ntt(a,n,-1); cut(a);
+	return a;
+}
+
+// ********************************
+
+vi inv(const vi &a,int n){ // n=2^k, ans=1/a
+	if(n==1)return vi(1,qpow(a[0],mod-2,mod));
+	return conv(inv(a,n/2),a,n,[](ll a,ll b){
+		return a*(2-a*b%mod+mod)%mod;
+	});
+}
+const int inv2=qpow(2,mod-2,mod);
+vi sqrt(const vi &a,int n){ // n=2^k
+	if(n==1)return vi(1,1); // vi(1,sqrtmod(a[0]));
+	vi f=sqrt(a,n/2); rs(f);
+	vi gg=conv(a,inv(f,n),n);
+	repeat(i,0,n)f[i]=inv2*(gg[i]+f[i])%mod;
+	return f;
+}
+vi ln(const vi &a,int n){ // n=2^k
+	return cal(conv(der(a,n),inv(a,n),n),n);
+}
+vi exp(const vi &a,int n){ // n=2^k
+	if(n==1)return vi(1,1);
+	vi b=exp(a,n/2);
+	vi lnb=ln(b,n);
+	repeat(i,0,n)lnb[i]=D(a[i]-lnb[i]); lnb[0]++;
+	return conv(b,lnb,n);
+}
+pair<vi,vi> divmod(vi a,const vi &b,int n){ // n=2^k, |fi|=n-m+1, |se|=m-1, fi*b+se=a
+	int m=b.size(); rs(a);
+	auto rev=[](vi a){
+		reverse(a.begin(),a.end());
+		return a;
+	};
+	vi d=conv(rev(a),inv(rev(b),n),n);
+	d.resize(n-m+1); d=rev(d);
+	vi r=conv(d,b,n); r.resize(m-1);
+	repeat(i,0,m-1)r[i]=D(a[i]-r[i]);
+	return {d,r};
+}
+const ll im=911660635; // im = sqrtmod(-1)
+vi sin(vi a,int n){ // n=2^k
+	rs(a);
+	repeat(i,0,n)(a[i]*=im)%=mod;
+	a=exp(a,n);
+	auto b=inv(a,n);
+	repeat(i,0,n)a[i]=D(a[i]-b[i])*inv2%mod*(mod-im)%mod;
+	return a;
+}
+vi cos(vi a,int n){ // n=2^k
+	rs(a);
+	repeat(i,0,n)(a[i]*=im)%=mod;
+	a=exp(a,n);
+	auto b=inv(a,n);
+	repeat(i,0,n)a[i]=(a[i]+b[i])*inv2%mod;
+	return a;
+}
+vi tan(vi a,int n){ // n=2^k
+	return conv(sin(a,n),inv(cos(a,n),n),n);
+}
+vi asin(vi a,int n){ // n=2^k
+	vi d=der(a,n);
+	a=conv(a,a,n,[](ll a,ll b){
+		return D(1-a*b%mod);
+	});
+	return cal(conv(d,inv(sqrt(a,n),n),n),n);
+}
+vi acos(vi a,int n){ // n=2^k
+	a=asin(a,n);
+	repeat(i,0,n)a[i]=D(-a[i]);
+	return a;
+}
+vi atan(vi a,int n){ // n=2^k
+	vi d=der(a,n);
+	a=conv(a,a,n,[](ll a,ll b){
+		return D(1+a*b%mod);
+	});
+	return cal(conv(d,inv(a,n),n),n);
+}
+```
+
+## 多项式快速幂
+
+```c++
+ll getmod(char s[],int mod){
+	ll x=0;
+	repeat(i,0,strlen(s))x=(x*10+s[i]-48)%mod;
+	return x;
+}
+vi qpow_trivial(vi a,ll m,int n){ // n=2^k, a[0]=1
+	a=ln(a,n);
+	repeat(i,0,n)(a[i]*=m)%=mod;
+	return exp(a,n);
+}
+vi qpow(vi a,char s[],int n){ // n=2^k
+	rs(a); ll m=getmod(s,mod),m1=getmod(s,mod-1);
+	ll l; for(l=0;l<n && a[l]==0;l++);
+	if(l*m>=n)return vi();
+	if(l && strlen(s)>=7)return vi(); 
+	int in=qpow(a[l],mod-2,mod);
+	int owe=qpow(a[l],m1,mod); 
+	repeat(i,0,n-l)a[i]=a[i+l]*in%mod;
+	a=qpow_trivial(a,m,n);
+	l*=m;
+	repeat_back(i,l,n)a[i]=a[i-l]*owe%mod;
+	repeat(i,0,l)a[i]=0;
+	return a;
+}
+```
+
+## 多项式复合
+
+- [link](https://www.luogu.com.cn/problem/P5050) 卡常失败
+
+```c++
+const int L=142; // sqrt(n1)
+vi f,g[L+1],ng[L+1],G[L+1],nG[L+1];
+void prework(vi g[],vi ng[],int n){
+	n*=2; g[0]=vi(1,1); rs(g[0]),rs(g[1]);
+	vi e=g[1]; ntt(e,n,1);
+	repeat(i,1,L+1){
+		rs(g[i]); ng[i-1]=g[i-1]; ntt(ng[i-1],n,1);
+		repeat(j,0,n)g[i][j]=e[j]*ng[i-1][j]%mod;
+		ntt(g[i],n,-1); cut(g[i]);
+	}
+}
+void Solve(){
+	int n1=read()+1,m1=read()+1,n=polyn(max(n1,m1));
+	f=readpoly(n1);
+	g[1]=readpoly(m1); prework(g,ng,n);
+	G[1]=g[L]; prework(G,nG,n);
+	vi ans(n,0);
+	repeat(i,0,L){
+		static vi s; s.assign(n*2,0);
+		repeat(j,0,L){
+			int x=i*L+j;
+			if(x<n1){
+				repeat(k,0,n1)
+					(s[k]+=f[x]*g[j][k])%=mod;
+			}
+		}
+		ntt(s,n*2,1);
+		repeat(j,0,n*2)s[j]=s[j]*nG[i][j]%mod;
+		ntt(s,n*2,-1);
+		repeat(k,0,n1)ad(ans[k]+=s[k]);
+	}
+	print(ans,n1);
+}
+```
+
+## 多项式多点求值
+
+- 已知多项式 $f$ 和序列 $a$，求 $f(a_1),f(a_2),\ldots,f(a_m)$
+- 线性算法指输入 $n$ 维向量 $x$，经过 $m\times n$ 矩阵 $A$ 变换后输出 $m$ 维向量 $y=Ax$ 的算法
+- 转置原理指出，如果存在 $x'=A^Ty'$ 的算法，那么就有存在相同复杂度的 $y=Ax$ 的算法。将 $A^T$ 分解为三种指令 `x[i]+=x[j],x[i]*=c,swap(x[i],x[i])`，那么 $A$ 即倒着执行这些指令，并且将第一种指令变为 `x[j]+=x[i]`。（$A=E_1E_2\ldots E_k\rightarrow A^T=E_k^TE_{k-1}^T\ldots E_1^T$）
+- $O(n\log^2n)$，常数极大
+
+```c++
+vi convauto(vi a,vi b,const function<ll(ll,ll)> &f=[](ll a,ll b){return a*b%mod;}){
+	int n1=a.size()+b.size()-1,n=polyn(n1);
+	rs(a),rs(b);
+	ntt(a,n,1); ntt(b,n,1);
+	repeat(i,0,n)a[i]=f(a[i],b[i]);
+	ntt(a,n,-1);
+	a.resize(n1);
+	return a;
+}
+vi convtr(vi a,vi b,const function<ll(ll,ll)> &f=[](ll a,ll b){return a*b%mod;}){
+	int n1=a.size()+b.size()-1,n=polyn(n1);
+	rs(a),rs(b);
+	reverse(a.begin(),a.end());
+	ntt(a,n,1); ntt(b,n,1);
+	repeat(i,0,n)a[i]=f(a[i],b[i]);
+	ntt(a,n,-1);
+	reverse(a.begin(),a.end());
+	return a;
+}
+vi prod[N]; ll ans[N],a[N];
+#define lc x*2
+#define rc x*2+1
+void getprod(int x,int l,int r){
+	if(l==r){
+		prod[x]={1,D(-a[l])};
+		return;
+	}
+	int mid=(l+r)/2;
+	getprod(lc,l,mid);
+	getprod(rc,mid+1,r);
+	prod[x]=convauto(prod[lc],prod[rc]);
+}
+void dfs(int x,int l,int r,vi G){
+	G.resize(r-l+1);
+	if(l==r){
+		ans[l]=G[0];
+		return;
+	}
+	int mid=(l+r)/2;
+	dfs(lc,l,mid,convtr(G,prod[rc]));
+	dfs(rc,mid+1,r,convtr(G,prod[lc]));
+}
+void Solve(){
+	int n=read()+1,m=read();
+	vi f=readpoly(n); // poly
+	repeat(i,0,m)
+		a[i]=read(); // query
+	getprod(1,0,m-1);
+	vi v=inv(prod[1],polyn(m+1));
+	dfs(1,0,m-1,convtr(f,v));
+	repeat(i,0,m)
+		print(ans[i],1);
+}
+```
+
+## 括号序列专题
+
+- refer to [OI-Wiki](https://oi-wiki.org/topic/bracket/)
+- 括号序列后继，假设 `"("` 字典序小于 `")"`
+
+```c++
+bool next_brastr(string &s) {
+	int n=s.size(),dep=0;
+	repeat_back(i,0,n){
+		dep+=(s[i]==')')*2-1;
+		if(s[i]=='(' && dep>0){
+			dep--;
+			int L=(n-i-1-dep)/2;
+			int R=n-i-1-L;
+			s.resize(i);
+			s+=')'+string(L,'(')+string(R,')');
+			return 1;
+		}
+	}
+	return 0;
+}
+```
+
+- 括号序列康托展开+逆
+- A053121：设 $f(i,j)$ 表示长度为 $i$ 且存在 $j$ 个未匹配的右括号且不存在未匹配的左括号的括号序列的个数。
+- $f(0,0)=1,f(i,j) = f(i-1,j-1)+f(i-1,j+1)$
+- $f(n, m) = \dfrac{m+1}{n+1}\dbinom{n+1}{\frac{n-m}{2}}(\text{if } n-m \text{ is even}),0(\text{if } n-m \text{ is odd})$
+
+```c++
+ll f(int n,int m){
+	if((n-m)%2==1)return 0;
+	return C(n+1,(n-m)/2)*(m+1)%mod*qpow(n+1,mod-2)%mod;
+}
+ll order(string s){
+	int n=s.size(),dep=0; ll ans=0;
+	repeat(i,0,n){
+		if(s[i]==')')ans+=f(n-i-1,dep+1);
+		dep+=(s[i]=='(')*2-1;
+	}
+	return ans%mod;
+}
+string cantor(ll order,int n){ // 要去掉函数 f 的取模
+	int dep=0; string s;
+	repeat(i,0,n){
+		s+='(';
+		if(order>=f(n-i-1,dep+1)){
+			s.back()=')';
+			order-=f(n-i-1,dep+1);
+		}
+		dep+=(s[i]=='(')*2-1;
+	}
+	return s;
+}
+```
+
+## 减一的杨辉矩阵
+
+- [A014430](http://oeis.org/A014430)（但是下标的含义不太一样）
+$$
+\left[\begin{array}{c}
+1 & 2 & 3 & 4 & 5 \\
+2 & 5 & 9 & 14 & 20 \\
+3 & 9 & 19 & 34 & 55 \\
+4 & 14 & 34 & 69 &125 \\
+5 & 20 & 55 & 125 & 251 \\
+\end{array}\right]
+$$
+- 定义：$T(n,m)=\dbinom{n+m+2}{n+1}-1$
+- 递推式：$T(n,k)=T(n-1,k)+T(n,k-1)+1, T(0,0)=1$
+- 它是杨辉矩阵前缀和：$\displaystyle T(n,m)=\sum_{i=0}^n\sum_{j=0}^m\dbinom{i+j}{i}$
+
+## 区间历史最值
+
+- [模板题](https://www.luogu.com.cn/problem/P6242)，支持区间加、区间取min、区间和、区间max、区间历史max（$\max_{i\in[1,t]j\in [l,r]}h_i[j]$），$O(\log^2n)$
+
+```c++
+struct Segbeats { // init: build(1, 1, n, a)
+	struct Node {
+		int l, r;
+		int mx, mxh, se, cnt;
+		ll sum;
+		int a1, a1h, a2, a2h;
+	} a[N * 4];
+#define lc (u << 1)
+#define rc (u << 1 | 1)
+	void up(int u) { // private
+		a[u].sum = a[lc].sum + a[rc].sum;
+		a[u].mxh = max(a[lc].mxh, a[rc].mxh);
+		if (a[lc].mx == a[rc].mx) {
+			a[u].mx = a[lc].mx;
+			a[u].se = max(a[lc].se, a[rc].se);
+			a[u].cnt = a[lc].cnt + a[rc].cnt;
+		} else if (a[lc].mx > a[rc].mx) {
+			a[u].mx = a[lc].mx;
+			a[u].se = max(a[lc].se, a[rc].mx);
+			a[u].cnt = a[lc].cnt;
+		} else {
+			a[u].mx = a[rc].mx;
+			a[u].se = max(a[lc].mx, a[rc].se);
+			a[u].cnt = a[rc].cnt;
+		}
+	}
+	void update(int u, int k1, int k1h, int k2, int k2h) { // private
+		a[u].sum += 1ll * k1 * a[u].cnt + 1ll * k2 * (a[u].r - a[u].l + 1 - a[u].cnt);
+		a[u].mxh = max(a[u].mxh, a[u].mx + k1h);
+		a[u].a1h = max(a[u].a1h, a[u].a1 + k1h);
+		a[u].mx += k1, a[u].a1 += k1;
+		a[u].a2h = max(a[u].a2h, a[u].a2 + k2h);
+		if (a[u].se != -INF) a[u].se += k2;
+		a[u].a2 += k2;
+	}
+	void down(int u) { // private
+		int tmp = max(a[lc].mx, a[rc].mx);
+		if (a[lc].mx == tmp)
+			update(lc, a[u].a1, a[u].a1h, a[u].a2, a[u].a2h);
+		else
+			update(lc, a[u].a2, a[u].a2h, a[u].a2, a[u].a2h);
+		if (a[rc].mx == tmp)
+			update(rc, a[u].a1, a[u].a1h, a[u].a2, a[u].a2h);
+		else
+			update(rc, a[u].a2, a[u].a2h, a[u].a2, a[u].a2h);
+		a[u].a1 = a[u].a1h = a[u].a2 = a[u].a2h = 0;
+	}
+	void build(int u, int l, int r, int in[]) {
+		a[u].l = l, a[u].r = r;
+		a[u].a1 = a[u].a1h = a[u].a2 = a[u].a2h = 0;
+		if (l == r) {
+			a[u].sum = a[u].mxh = a[u].mx = in[l];
+			a[u].se = -INF, a[u].cnt = 1;
+			return;
+		}
+		int mid = l + r >> 1;
+		build(lc, l, mid, in);
+		build(rc, mid + 1, r, in);
+		up(u);
+	}
+	void add(int u, int x, int y, int k) {
+		if (a[u].l > y || a[u].r < x) return;
+		if (x <= a[u].l && a[u].r <= y) {
+			update(u, k, k, k, k);
+			return;
+		}
+		down(u);
+		add(lc, x, y, k), add(rc, x, y, k);
+		up(u);
+	}
+	void tomin(int u, int x, int y, int k) {
+		if (a[u].l > y || a[u].r < x || k >= a[u].mx) return;
+		if (x <= a[u].l && a[u].r <= y && k > a[u].se) {
+			update(u, k - a[u].mx, k - a[u].mx, 0, 0);
+			return;
+		}
+		down(u);
+		tomin(lc, x, y, k), tomin(rc, x, y, k);
+		up(u);
+	}
+	ll qsum(int u, int x, int y) {
+		if (a[u].l > y || a[u].r < x) return 0;
+		if (x <= a[u].l && a[u].r <= y) return a[u].sum;
+		down(u);
+		return qsum(lc, x, y) + qsum(rc, x, y);
+	}
+	int qmax(int u, int x, int y) {
+		if (a[u].l > y || a[u].r < x) return -INF;
+		if (x <= a[u].l && a[u].r <= y) return a[u].mx;
+		down(u);
+		return max(qmax(lc, x, y), qmax(rc, x, y));
+	}
+	int qhmax(int u, int x, int y) {
+		if (a[u].l > y || a[u].r < x) return -INF;
+		if (x <= a[u].l && a[u].r <= y) return a[u].mxh;
+		down(u);
+		return max(qhmax(lc, x, y), qhmax(rc, x, y));
+	}
+#undef lc
+#undef rc
+} sgt;
+```
+
+## K-D tree 模板更新
+
+- K-D tree 可以维护多维空间的点集，用替罪羊树的方法保证复杂度。
+- 建树、询问近邻参考第二段代码。
+- [模板题](https://www.luogu.com.cn/problem/P4148)，支持在线在 $(x,y)$ 处插入值、查询二维区间和。
+- 插入的复杂度为 $O(\log n)$。
+- 二维区间查询最坏复杂度为 $O(n^{1-\tfrac 1 k})=O(\sqrt n)$。
+- 询问近邻等很多骚操作的最坏复杂度为 $O(n)$，最好用别的算法替代。
+
+```c++
+struct kdt{
+	#define U(x,y) ((x)+(y))
+	#define U0 0
+	struct range{
+		int l,r;
+		range operator|(range b)const{
+			return {min(l,b.l),max(r,b.r)};
+		}
+		bool out(range b){
+			return l>b.r || b.l>r;
+		}
+		bool in(range b){
+			return b.l<=l && r<=b.r;
+		}
+	};
+	struct node{
+		int x,y,a; // (x,y): coordinate, a: value
+		int s,d,sz; // s: sum of value in subtree, d: cut direction, sz: size of subtree
+		range xx,yy; // xx/yy: range of coordinate x/y
+		node *l,*r; // left/right child
+		void up(){
+			sz=l->sz+r->sz+1;
+			s=U(a,U(l->s,r->s));
+			xx=range{x,x} | l->xx | r->xx;
+			yy=range{y,y} | l->yy | r->yy;
+		}
+		node *&ch(int px,int py){ // in which child
+			if(d==0)return px<x ? l : r;
+			else return py<y ? l : r;
+		}
+		node(){
+			sz=0; a=s=U0;
+			xx=yy={inf,-inf};
+			l=r=Null;
+		}
+		node(int x_,int y_,int a_){
+			x=x_,y=y_,a=a_;
+			l=r=Null;
+			up();
+		}
+	}*rt;
+	static node Null[N],*pl;
+	vector<node *> cache;
+	void init(){ // while using kdtrees, notice Null is static
+		rt=pl=Null;
+	}
+	node *build(node **l,node **r,int d){ // private
+		if(l>=r)return Null;
+		node **mid=l+(r-l)/2;
+		if(d==0)
+			nth_element(l,mid,r,[&](node *a,node *b){
+				return a->x < b->x;
+			});
+		else
+			nth_element(l,mid,r,[&](node *a,node *b){
+				return a->y < b->y;
+			});
+		node *u=*mid;
+		u->d=d;
+		u->l=build(l,mid,d^1);
+		u->r=build(mid+1,r,d^1);
+		u->up();
+		return u;
+	}
+	void pia(node *u){ // private
+		if(u==Null)return;
+		pia(u->l);
+		cache.push_back(u);
+		pia(u->r);
+	}
+	void insert(node *&u,int x,int y,int v){ // private
+		if(u==Null){
+			*++pl=node(x,y,v); u=pl; u->d=0;
+			return;
+		}
+		insert(u->ch(x,y),x,y,v);
+		u->up();
+		if(0.725*u->sz <= max(u->l->sz,u->r->sz)){
+			cache.clear();
+			pia(u);
+			u=build(cache.data(),cache.data()+cache.size(),u->d);
+		}
+	}
+	void insert(int x,int y,int v){
+		insert(rt,x,y,v);
+	}
+	range qx,qy;
+	int query(node *u){ // private
+		if(u==Null)return U0;
+		if(u->xx.out(qx) || u->yy.out(qy))return U0;
+		if(u->xx.in(qx) && u->yy.in(qy))return u->s;
+		return U((range{u->x,u->x}.in(qx) && range{u->y,u->y}.in(qy) ? u->a : U0),
+			U(query(u->l),query(u->r)));
+	}
+	int query(int x1,int y1,int x2,int y2){
+		qx={x1,x2};
+		qy={y1,y2};
+		return query(rt);
+	}
+}tr;
+kdt::node kdt::Null[N],*kdt::pl;
+```
+
+- [模板题](https://www.luogu.com.cn/problem/P1429)，支持询问近邻。
+
+```c++
+struct kdt{
+	struct range{
+		lf l,r;
+		range operator|(range b)const{
+			return {min(l,b.l),max(r,b.r)};
+		}
+		lf dist(lf x){
+			return x<l ? l-x : x>r ? x-r : 0;
+		}
+	};
+	struct node{
+		lf x,y; // (x,y): coordinate
+		int d,sz; // d: cut direction, sz: size of subtree
+		range xx,yy; // xx/yy: range of coordinate x/y
+		node *l,*r; // left/right child
+		lf dist(lf x,lf y){
+			return hypot(xx.dist(x),yy.dist(y));
+		}
+		void up(){
+			sz=l->sz+r->sz+1;
+			xx=range{x,x} | l->xx | r->xx;
+			yy=range{y,y} | l->yy | r->yy;
+		}
+		node(){
+			sz=0;
+			xx=yy={inf,-inf};
+			l=r=Null;
+		}
+		node(lf x_,lf y_){
+			x=x_,y=y_;
+			l=r=Null;
+			up();
+		}
+	}*rt;
+	static node Null[N],*pl;
+	vector<node *> cache;
+	void init(){ // while using kdtrees, notice Null is static
+		rt=pl=Null;
+	}
+	node *build(node **l,node **r,int d){ // private
+		if(l>=r)return Null;
+		node **mid=l+(r-l)/2;
+		if(d==0)
+			nth_element(l,mid,r,[&](node *a,node *b){
+				return a->x < b->x;
+			});
+		else
+			nth_element(l,mid,r,[&](node *a,node *b){
+				return a->y < b->y;
+			});
+		node *u=*mid;
+		u->d=d;
+		u->l=build(l,mid,d^1);
+		u->r=build(mid+1,r,d^1);
+		u->up();
+		return u;
+	}
+	void build(pair<lf,lf> a[],int n){
+		init(); cache.clear();
+		repeat(i,0,n){
+			*++pl=node(a[i].fi,a[i].se);
+			cache.push_back(pl);
+		}
+		rt=build(cache.data(),cache.data()+cache.size(),0);
+	}
+	lf ans;
+	void mindis(node *u,lf x,lf y,node *s){ // private
+		if(u==Null)return;
+		if(u!=s)ans=min(ans,hypot(x-u->x,y-u->y));
+		lf d1=u->l->dist(x,y);
+		lf d2=u->r->dist(x,y);
+		if(d1<d2){ // optimize
+			if(ans>d1)mindis(u->l,x,y,s);
+			if(ans>d2)mindis(u->r,x,y,s);
+		}
+		else{
+			if(ans>d2)mindis(u->r,x,y,s);
+			if(ans>d1)mindis(u->l,x,y,s);
+		}
+	}
+	lf mindis(lf x,lf y,node *s){ // min distance from (x,y), while delete node s
+		ans=inf;
+		mindis(rt,x,y,s);
+		return ans;
+	}
+}tr;
+kdt::node kdt::Null[N],*kdt::pl;
+```
+
+- 删除操作。
+
+```c++
+struct kdt{
+	struct range{
+		int l,r;
+		range operator|(range b){
+			return {min(l,b.l),max(r,b.r)};
+		}
+		int dist(int x){
+			return x>0 ? r*x : l*x;
+		}
+	};
+	struct node{
+		int x,y; // (x,y): coordinate
+		int d,sz,exsz,exist; // d: cut direction, sz: size of subtree
+		range xx,yy; // xx/yy: range of coordinate x/y
+		node *l,*r; // left/right child
+		int dist(int x,int y){
+			return xx.dist(x)+yy.dist(y);
+		}
+		node *&ch(int px,int py){ // in which child
+			if(d==0)return make_pair(px,py)<make_pair(x,y) ? l : r;
+			else return make_pair(py,px)<make_pair(y,x) ? l : r;
+		}
+		void up(){
+			exsz=l->exsz+r->exsz+!!exist;
+			sz=l->sz+r->sz+1;
+			xx=range{x,x} | l->xx | r->xx;
+			yy=range{y,y} | l->yy | r->yy;
+		}
+		node(){
+			exist=exsz=sz=0;
+			xx=yy={inf,-inf};
+			l=r=Null;
+		}
+		node(int x_,int y_){
+			exist=1;
+			x=x_,y=y_;
+			l=r=Null;
+			up();
+		}
+	}*rt;
+	static node Null[N],*pl;
+	vector<node *> cache;
+	void init(){ // while using kdtrees, notice Null is static
+		rt=pl=Null;
+	}
+	node *build(node **l,node **r,int d){ // private
+		if(l>=r)return Null;
+		node **mid=l+(r-l)/2;
+		if(d==0)
+			nth_element(l,mid,r,[&](node *a,node *b){
+				return make_pair(a->x,a->y) < make_pair(b->x,b->y);
+			});
+		else
+			nth_element(l,mid,r,[&](node *a,node *b){
+				return make_pair(a->y,a->x) < make_pair(b->y,b->x);
+			});
+		node *u=*mid;
+		u->d=d;
+		u->l=build(l,mid,d^1);
+		u->r=build(mid+1,r,d^1);
+		u->up();
+		return u;
+	}
+	void pia(node *u){ // private
+		if(u==Null)return;
+		pia(u->l);
+		if(u->exist)cache.push_back(u);
+		pia(u->r);
+	}
+	void insert(node *&u,int x,int y){ // private
+		if(u==Null){
+			*++pl=node(x,y); u=pl; u->d=0;
+			return;
+		}
+		if(u->x==x && u->y==y){
+			u->exist++;
+			return;
+		}
+		insert(u->ch(x,y),x,y);
+		u->up();
+		if(0.9*u->sz <= max(u->l->sz,u->r->sz) || 0.5*u->sz >= u->exsz){
+			cache.clear();
+			pia(u);
+			u=build(cache.data(),cache.data()+cache.size(),u->d);
+		}
+	}
+	void insert(int x,int y){
+		insert(rt,x,y);
+	}
+	void erase(node *&u,int x,int y){
+		if(u->x==x && u->y==y){
+			u->exist--;
+		}
+		else{
+			erase(u->ch(x,y),x,y);
+		}
+		u->up();
+		if(0.9*u->sz <= max(u->l->sz,u->r->sz) || 0.5*u->sz >= u->exsz){
+			cache.clear();
+			pia(u);
+			u=build(cache.data(),cache.data()+cache.size(),u->d);
+		}
+	}
+	void erase(int x,int y){
+		erase(rt,x,y);
+	}
+	int ans;
+	void mindis(node *u,int x,int y){ // private
+		if(u==Null)return;
+		if(u->exist)ans=max(ans,x*u->x+y*u->y);
+		int d1=u->l->dist(x,y);
+		int d2=u->r->dist(x,y);
+		if(d1>d2){ // optimize
+			if(ans<d1 && u->l->sz)mindis(u->l,x,y);
+			if(ans<d2 && u->r->sz)mindis(u->r,x,y);
+		}
+		else{
+			if(ans<d2 && u->r->sz)mindis(u->r,x,y);
+			if(ans<d1 && u->l->sz)mindis(u->l,x,y);
+		}
+	}
+	int mindis(int x,int y){ // min distance from (x,y), while delete node s
+		ans=-INF;
+		mindis(rt,x,y);
+		return ans;
+	}
+	void dfs(node *u){
+		if(u==Null)return;
+		printf("(%lld,%lld)[",u->x,u->y);
+		dfs(u->l); printf(",");
+		dfs(u->r); printf("]");
+	}
+	void print(){
+		dfs(rt);
+		puts("");
+	}
+}tr;
+kdt::node kdt::Null[N],*kdt::pl;
 ```
