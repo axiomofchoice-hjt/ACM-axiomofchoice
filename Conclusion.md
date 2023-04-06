@@ -468,7 +468,7 @@ $$\begin{aligned}&\sum_{i=1}^n \sum_{j=1}^m \dfrac{i\cdot j}{\gcd(i,j)}\newline 
 ### 斐波那契数列
 
 - 递推式：$F_0=0,F_1=1,F_n=F_{n-1}+F_{n-2}$
-- 通项公式：$F_n=\dfrac 1 {\sqrt{5}} [(\dfrac{1+\sqrt 5}2)^n-(\dfrac{1-\sqrt 5}2)^n)]$ （公式中若 5 是二次剩余则可以化简，比如 $\sqrt 5\equiv 383008016\pmod {1000000009}$）
+- 通项公式：$F_n=\dfrac 1 {\sqrt{5}} [(\dfrac{1+\sqrt 5}2)^n-(\dfrac{1-\sqrt 5}2)^n]$ （公式中若 5 是二次剩余则可以化简，比如 $\sqrt 5\equiv 383008016\pmod {1000000009}$）
 - $F_{a+b-1}=F_{a-1}F_{b-1}+F_aF_b$
 - 卡西尼性质：$F_{n-1}F_{n+1}-F_n^2=(-1)^n$
 - $F_{n}^2+F_{n+1}^2=F_{2n+1}$

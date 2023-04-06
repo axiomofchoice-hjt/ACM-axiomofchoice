@@ -2,8 +2,9 @@
 using namespace std;
 
 /**
- * @brief 大数类
+ * @brief 二进制大数类
  * 支持与十进制字符串的互相转换、加法、减法、乘法。
+ * （useless，需要普通的高精度板子转到 Math.md > 数学杂项 > struct of 高精度）
  *
  */
 struct big {
