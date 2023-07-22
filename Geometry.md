@@ -1,30 +1,29 @@
 # 计算几何
 
-- [计算几何](#计算几何)
-  - [struct of 向量](#struct-of-向量)
-  - [struct of 直线](#struct-of-直线)
-  - [struct of 圆](#struct-of-圆)
-  - [平面几何基本操作](#平面几何基本操作)
-    - [判断两条线段是否相交](#判断两条线段是否相交)
-    - [点是否在线段上](#点是否在线段上)
-    - [多边形面积](#多边形面积)
-    - [多边形的面积质心](#多边形的面积质心)
-    - [凸包切线](#凸包切线)
-    - [凸包与圆的面积交](#凸包与圆的面积交)
-  - [二维凸包](#二维凸包)
-    - [<补充> 动态凸包](#补充-动态凸包)
-  - [旋转卡壳](#旋转卡壳)
-  - [最大空矩形 using 扫描法](#最大空矩形-using-扫描法)
-  - [平面最近点对 using 分治](#平面最近点对-using-分治)
-  - [最小圆覆盖 using 随机增量法](#最小圆覆盖-using-随机增量法)
-  - [半面交 using S&I 算法](#半面交-using-si-算法)
-  - [struct of 整点直线](#struct-of-整点直线)
-  - [整点向量线性基](#整点向量线性基)
-  - [曼哈顿最小生成树](#曼哈顿最小生成树)
-  - [圆的离散化](#圆的离散化)
-  - [Delaunay 三角剖分](#delaunay-三角剖分)
-  - [struct of 三维向量](#struct-of-三维向量)
-  - [三维凸包](#三维凸包)
+- [struct of 向量](#struct-of-向量)
+- [struct of 直线](#struct-of-直线)
+- [struct of 圆](#struct-of-圆)
+- [平面几何基本操作](#平面几何基本操作)
+  - [判断两条线段是否相交](#判断两条线段是否相交)
+  - [点是否在线段上](#点是否在线段上)
+  - [多边形面积](#多边形面积)
+  - [多边形的面积质心](#多边形的面积质心)
+  - [凸包切线](#凸包切线)
+  - [凸包与圆的面积交](#凸包与圆的面积交)
+- [二维凸包](#二维凸包)
+  - [\<补充\> 动态凸包](#补充-动态凸包)
+- [旋转卡壳](#旋转卡壳)
+- [最大空矩形 using 扫描法](#最大空矩形-using-扫描法)
+- [平面最近点对 using 分治](#平面最近点对-using-分治)
+- [最小圆覆盖 using 随机增量法](#最小圆覆盖-using-随机增量法)
+- [半面交 using S\&I 算法](#半面交-using-si-算法)
+- [struct of 整点直线](#struct-of-整点直线)
+- [整点向量线性基](#整点向量线性基)
+- [曼哈顿最小生成树](#曼哈顿最小生成树)
+- [圆的离散化](#圆的离散化)
+- [Delaunay 三角剖分](#delaunay-三角剖分)
+- [struct of 三维向量](#struct-of-三维向量)
+- [三维凸包](#三维凸包)
 
 ## struct of 向量
 
@@ -992,9 +991,9 @@ vec rotate(vec p, vec l0, vec l1, lf th) { // p 绕轴 (l0, l1) 旋转 th 弧度
     return rotate(p - l0, l1 - l0, th) + l0;
 }
 void inter_ff(vec p1, vec dir1, vec p2, vec dir2, vec &res1, vec &res2) { // 面与面的交线
-	vec e = cross(dir1, dir2), v = cross(dir1, e);
-	lf d = dot(dir2, v); if (abs(d) < 1e-9) return;
-	vec q = p1 + v * (dot(dir2, p2 - p1) / d);
+    vec e = cross(dir1, dir2), v = cross(dir1, e);
+    lf d = dot(dir2, v); if (abs(d) < 1e-9) return;
+    vec q = p1 + v * (dot(dir2, p2 - p1) / d);
     res1 = q;
     res2 = q + e;
 }
